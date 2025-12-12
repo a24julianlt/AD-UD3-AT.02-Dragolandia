@@ -1,5 +1,7 @@
 package com.model;
 
+import java.util.List;
+
 import jakarta.persistence.*;
 
 @Entity
@@ -14,6 +16,8 @@ public class Bosque {
     private int nivelPeligro;
     private Monstruo monstruoJefe;
 
+    @OneToMany
+    private List<Monstruo> mosntruos;
 
     public Bosque() {
     }
