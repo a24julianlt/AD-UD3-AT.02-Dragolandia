@@ -5,9 +5,10 @@ import java.util.List;
 import jakarta.persistence.Entity;
 
 @Entity
-public class BolaDeFuego extends Hechizo {
+public class BolaDeFuego {
 
-    @Override
+    private String nombre = "Bola de fuego";
+    
     public void efecto(List<Monstruo> monstruos) {
         for (Monstruo mons : monstruos) {
             int daño = (int) Math.random() * 10;

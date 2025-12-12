@@ -1,12 +1,11 @@
 package com.model;
 
 import java.util.List;
-import jakarta.persistence.Entity;
 
-@Entity
-public class Rayo extends Hechizo {
+public class Rayo {
 
-    @Override
+    private String nombre = "Rayo";
+
     public void efecto(List<Monstruo> monstruos) {
         if (monstruos.size() < 1) {
             System.out.println("El rayo ataca al enemigo");

@@ -4,9 +4,10 @@ import java.util.List;
 import jakarta.persistence.Entity;
 
 @Entity
-public class Meteorito extends Hechizo {
+public class Meteorito {
 
-    @Override
+    private String nombre = "Meteorito";
+
     public void efecto(List<Monstruo> monstruos) {
         for (Monstruo mons : monstruos) {
             mons.setVida(0);

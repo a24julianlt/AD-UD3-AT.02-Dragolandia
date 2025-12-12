@@ -6,8 +6,33 @@ import jakarta.persistence.*;
 
 @Entity
 @Table(name="hechizos")
-public abstract class Hechizo {
+public class Hechizo {
 
-    public void efecto(List<Monstruo> monstruos){}
+    private BolaDeFuego bolaDeFuego;
+    private Rayo rayo;
+    private BolaDeNieve bolaDeNieve;
+    private Meteorito meteorito;
+
+    public Hechizo() {
+        this.bolaDeFuego = new BolaDeFuego();
+        this.rayo = new Rayo();
+        this.bolaDeNieve = new BolaDeNieve();
+        this.meteorito = new Meteorito();
+    }
+
+    public void usarBolaDeFuego(List<Monstruo> monstruos) {
+        bolaDeFuego.efecto(monstruos);
+    }
+
+    public void usarRayo(List<Monstruo> monstruos) {
+        rayo.efecto(monstruos);
+    }
     
+    public void usarBolaDeNieve(List<Monstruo> monstruos) {
+        bolaDeNieve.efecto(monstruos);
+    }
+
+    public void usarMeteorito(List<Monstruo> monstruos) {
+        meteorito.efecto(monstruos);
+    }
 }
