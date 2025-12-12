@@ -1,8 +1,10 @@
 package com.model;
 
 import java.util.List;
+import jakarta.persistence.Entity;
 
-public class Rayo implements Hechizo {
+@Entity
+public class Rayo extends Hechizo {
 
     @Override
     public void efecto(List<Monstruo> monstruos) {

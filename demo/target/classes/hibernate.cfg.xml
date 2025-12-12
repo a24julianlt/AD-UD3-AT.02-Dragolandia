@@ -22,5 +22,6 @@
         <mapping class="com.model.Mago"/>
         <mapping class="com.model.Monstruo"/>
         <mapping class="com.model.Bosque"/>
+        <mapping class="com.model.Dragon"/>
     </session-factory>
 </hibernate-configuration>

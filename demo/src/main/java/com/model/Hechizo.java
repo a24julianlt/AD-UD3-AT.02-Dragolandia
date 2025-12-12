@@ -2,8 +2,12 @@ package com.model;
 
 import java.util.List;
 
-public interface Hechizo {
+import jakarta.persistence.*;
 
-    public void efecto(List<Monstruo> monstruos);
+@Entity
+@Table(name="hechizos")
+public abstract class Hechizo {
+
+    public void efecto(List<Monstruo> monstruos){}
     
 }

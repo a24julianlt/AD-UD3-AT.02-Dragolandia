@@ -7,6 +7,7 @@ public class ControladorPrincipal {
     private final ControladorMonstruo contrMonstruo;
     private final ControladorBosque contrBosque;
     private final ControladorDragon contrDragon;
+    private final HibernateSingleton database = HibernateSingleton.getInstance();
 
     public ControladorPrincipal() {
         this.contrBosque = new ControladorBosque();

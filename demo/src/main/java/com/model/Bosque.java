@@ -14,6 +14,8 @@ public class Bosque {
 
     private String nombre;
     private int nivelPeligro;
+
+    @OneToOne
     private Monstruo monstruoJefe;
 
     @OneToMany

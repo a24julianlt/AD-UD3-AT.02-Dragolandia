@@ -15,6 +15,8 @@ public class Mago {
     private String nombre;
     private int vida;
     private int nivelMagia;
+
+    @OneToMany
     private List<Hechizo> conjuros;
 
     public Mago() {
