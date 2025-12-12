@@ -62,6 +62,10 @@ public class Mago {
         this.nivelMagia = nivelMagia;
     }
 
+    public void añadirConjuro(Hechizo hechizo) {
+        conjuros.add(hechizo);
+    }
+
     public void lanzarhechizo(Monstruo monstruo) {
         int nuevaVida = monstruo.getVida() - this.getNivelMagia();
 

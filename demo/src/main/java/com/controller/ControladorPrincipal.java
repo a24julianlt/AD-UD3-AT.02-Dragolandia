@@ -6,17 +6,20 @@ public class ControladorPrincipal {
     private final ControladorMago contrMago;
     private final ControladorMonstruo contrMonstruo;
     private final ControladorBosque contrBosque;
+    private final ControladorDragon contrDragon;
 
     public ControladorPrincipal() {
         this.contrBosque = new ControladorBosque();
         this.contrMago = new ControladorMago();
         this.contrMonstruo = new ControladorMonstruo();
+        this.contrDragon = new ControladorDragon();
     }
 
-    public void crearPartida(String nombreMago, String nombreMons, String nombreBosque) {
+    public void crearPartida(String nombreMago, String nombreMons, String nombreBosque, String nombreDragon) {
         contrMago.crearMago(nombreMago);
         contrMonstruo.crearMonstruo(nombreMons);
         contrBosque.crearBosque(nombreBosque, contrMonstruo.getMonstruo());
+        contrDragon.crearDragon(nombreDragon, contrBosque.getBosque());
     }
 
     public int getVidaMago() {

@@ -16,10 +16,13 @@ public class Dragon {
 
     @OneToOne
     private Bosque bosque;
+    
+    public Dragon() {
+    }
 
     public Dragon(String nombre) {
         this.nombre = nombre;
-        this.intensidadFuego = (int)Math.random() * 20;
+        this.intensidadFuego = (int) Math.random() * 20;
         this.resistencia = 30;
     }
 
@@ -63,10 +66,8 @@ public class Dragon {
         this.bosque = bosque;
     }
 
-    
     public void exhalar(Monstruo monstruo) {
         monstruo.setVida(monstruo.getVida() - intensidadFuego);
     }
 
-    
 }

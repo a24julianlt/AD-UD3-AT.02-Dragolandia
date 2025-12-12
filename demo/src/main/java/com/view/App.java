@@ -39,8 +39,17 @@ public class App {
             nombreBosque = sc.nextLine();
         }
 
+        System.out.println();
+
+        System.out.println("Muy bien, ahora introduce el nombre del dragon:");
+        String nombreDragon = sc.nextLine();
+        while (nombreDragon.trim().isEmpty()) {
+            System.out.println("Vuelve a introducir el nombre del dragon, por favor: ");
+            nombreDragon = sc.nextLine();
+        }
+
         ControladorPrincipal controller = new ControladorPrincipal();
-        controller.crearPartida(nombreMago, nombreMonstruo, nombreBosque);
+        controller.crearPartida(nombreMago, nombreMonstruo, nombreBosque, nombreDragon);
 
         System.out.println();
         System.out.println("Te enfrentaras al monstruo " + nombreMonstruo + " de tipo " + controller.getTipoMons() + " por el control del bosque " + nombreBosque);

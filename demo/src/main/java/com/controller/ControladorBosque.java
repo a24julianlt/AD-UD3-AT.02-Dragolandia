@@ -11,12 +11,14 @@ public class ControladorBosque {
         this.bosque = new Bosque();
     }
 
-    
-
     public void crearBosque(String nombre, Monstruo monstruo) {
         bosque.setNombre(nombre);
         bosque.setMonstruoJefe(monstruo);
         bosque.setNivelPeligro(5);
+    }
+
+    public Bosque getBosque() {
+        return bosque;
     }
 
     public String getNombre() {
