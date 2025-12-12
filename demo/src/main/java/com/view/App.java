@@ -39,11 +39,11 @@ public class App {
             nombreBosque = sc.nextLine();
         }
 
-        ControladorBosque contrBosque = new ControladorBosque();
-        contrBosque.crearPartida(nombreMago, nombreMonstruo, nombreBosque);
+        ControladorPrincipal controller = new ControladorPrincipal();
+        controller.crearPartida(nombreMago, nombreMonstruo, nombreBosque);
 
         System.out.println();
-        System.out.println("Te enfrentaras al monstruo " + nombreMonstruo + " de tipo " + contrBosque.getTipoMons() + " por el control del bosque " + nombreBosque);
+        System.out.println("Te enfrentaras al monstruo " + nombreMonstruo + " de tipo " + controller.getTipoMons() + " por el control del bosque " + nombreBosque);
 
         System.out.println();
         System.out.println("Perfecto, vamos a empezar a pelear");
@@ -56,8 +56,8 @@ public class App {
         }
 
         System.out.println("Empiezas atacando: ");
-        while (contrBosque.finPartida()) {
-            System.out.println("Lanzas un hechizo de " + contrBosque.getNivelMagia() + " de poder mágico");
+        while (controller.finPartida()) {
+            System.out.println("Lanzas un hechizo de " + controller.getNivelMagia() + " de poder mágico");
             System.out.println();
 
             try {
@@ -65,8 +65,8 @@ public class App {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            contrBosque.atacaMago();
-            System.out.println("El monstruo queda con " + contrBosque.getVidaMons() + " puntos de vida");
+            controller.atacaMago();
+            System.out.println("El monstruo queda con " + controller.getVidaMons() + " puntos de vida");
             System.out.println();
 
             try {
@@ -75,7 +75,7 @@ public class App {
                 e.printStackTrace();
             }
 
-            if (!contrBosque.finPartida()) {
+            if (!controller.finPartida()) {
                 break;
             }
 
@@ -89,8 +89,8 @@ public class App {
                 e.printStackTrace();
             }
 
-            contrBosque.atacaMons();
-            System.out.println("Te quedas con " + contrBosque.getVidaMago() + " puntos de vida");
+            controller.atacaMons();
+            System.out.println("Te quedas con " + controller.getVidaMago() + " puntos de vida");
 
             System.out.println();
 
@@ -101,7 +101,7 @@ public class App {
             }
         }
 
-        if (contrBosque.ganaMago()) {
+        if (controller.ganaMago()) {
             System.out.println("¡¡FELICIDADES!!");
             System.out.println("¡¡HAS GANADO!!");
             System.out.println("Ahora eres el dueño del bosque " + nombreBosque);

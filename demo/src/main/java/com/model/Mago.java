@@ -1,5 +1,7 @@
 package com.model;
 
+import java.util.List;
+
 import jakarta.persistence.*;
 
 @Entity
@@ -13,6 +15,7 @@ public class Mago {
     private String nombre;
     private int vida;
     private int nivelMagia;
+    private List<Hechizo> conjuros;
 
     public Mago() {
     }
