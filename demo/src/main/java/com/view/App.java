@@ -1,7 +1,15 @@
 package com.view;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
 import com.controller.*;
+import com.model.BolaDeFuego;
+import com.model.BolaDeNieve;
+import com.model.Hechizo;
+import com.model.Meteorito;
+import com.model.Rayo;
 
 public class App {
     public static void main(String[] args) {
@@ -18,10 +26,56 @@ public class App {
             nombreMago = sc.nextLine();
         }
 
-        
         System.out.println("Bienvenido, " + nombreMago);
         System.out.println();
 
+        List<String> hechizos = new ArrayList<String>();
+        Map<Integer, String> posibles = Map.of(
+                1, "Bola de fuego",
+                2, "Bola de nieve",
+                3, "Rayo",
+                4, "Meteorito");
+        String opc = "";
+
+
+/*
+
+
+TERMINAR SELECCIONAR HECHIZO
+
+*/
+
+
+
+        while (!opc.equals("0") || hechizos.size() == 4) {
+            System.out.println("Elige que hechizos quieres.");
+            System.out.println("Opciones: ");
+            for (int i = 1; i <= posibles.size(); i++) {
+                System.out.println(i + ". " + posibles.get(i));
+            }
+            System.out.println("Puedes tener un máximo de 4 hechizos");
+            String hechizo = sc.nextLine();
+            posibles.remove((int) Integer.parseInt(hechizo));
+            hechizos.add(hechizo);
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
         System.out.println("Ahora vas a nombrar a tu enemigo, un monstruo");
         System.out.println("Introduce el nombre del monstruo: ");
         String nombreMonstruo = sc.nextLine();
@@ -29,7 +83,7 @@ public class App {
             System.out.println("Vuelve a introducir el nombre del monstruo, por favor: ");
             nombreMonstruo = sc.nextLine();
         }
-        
+
         System.out.println();
 
         System.out.println("Muy bien, ahora introduce el nombre del bosque que quieres conquistar:");
@@ -54,7 +108,8 @@ public class App {
         controller.gardarMago();
 
         System.out.println();
-        System.out.println("Te enfrentaras al monstruo " + nombreMonstruo + " de tipo " + controller.getTipoMons() + " por el control del bosque " + nombreBosque);
+        System.out.println("Te enfrentaras al monstruo " + nombreMonstruo + " de tipo " + controller.getTipoMons()
+                + " por el control del bosque " + nombreBosque);
 
         System.out.println();
         System.out.println("Perfecto, vamos a empezar a pelear");
