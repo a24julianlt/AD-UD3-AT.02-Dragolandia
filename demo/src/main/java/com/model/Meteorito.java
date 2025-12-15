@@ -6,7 +6,9 @@ import jakarta.persistence.Entity;
 @Entity
 public class Meteorito extends Hechizo {
 
-    private String nombre = "Meteorito";
+    public Meteorito(){
+        this.nombre = "Meteorito";
+    }
 
     @Override
     public void efecto(List<Monstruo> monstruos) {

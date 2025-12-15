@@ -2,10 +2,7 @@ package com.controller;
 
 import com.model.Mago;
 
-import jakarta.transaction.Transaction;
-
 import org.hibernate.Session;
-import org.hibernate.SessionFactory;
 
 public class ControladorMago {
     private final Mago mago;
@@ -37,8 +34,7 @@ public class ControladorMago {
      * BASE DE DATOS
      */
     public void gardarMago() {
-        try (SessionFactory sf = database.getSessionFactory();
-                Session s = sf.openSession()) {
+        try (Session s = database.getSessionFactory().openSession()) {
 
             s.getTransaction().begin();
             s.persist(getMago());

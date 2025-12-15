@@ -26,6 +26,8 @@ public class ControladorPrincipal {
         contrBosque.crearBosque(nombreBosque, contrMonstruo.getMonstruo());
         contrDragon.crearDragon(nombreDragon, contrBosque.getBosque());
         // Los hechizos son siempre los mismo, por eso ya se crean con el inicializador
+        // entonces los guardamos automáticamente
+        contrHechizos.gardarHechizos();
     }
 
     public int getVidaMago() {

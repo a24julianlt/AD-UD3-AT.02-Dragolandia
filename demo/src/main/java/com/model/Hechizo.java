@@ -6,13 +6,14 @@ import jakarta.persistence.*;
 
 @Entity
 @Table(name = "hechizos")
+@Inheritance(strategy = InheritanceType.JOINED)
 public abstract class Hechizo {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    protected int id;
 
-    private String nombre;
+    protected String nombre;
 
     public Hechizo() {
 

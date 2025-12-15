@@ -1,7 +1,8 @@
 package com.controller;
 
-
 import java.util.List;
+
+import org.hibernate.Session;
 
 import com.model.BolaDeFuego;
 import com.model.BolaDeNieve;
@@ -16,11 +17,10 @@ public class ControladorHechizos {
 
     public ControladorHechizos() {
         this.hechizos = List.of(
-            new BolaDeFuego(),
-            new BolaDeNieve(),
-            new Rayo(),
-            new Meteorito()
-        );
+                new BolaDeFuego(),
+                new BolaDeNieve(),
+                new Rayo(),
+                new Meteorito());
     }
 
     public String getNombreHechizo(int indice) {
@@ -29,5 +29,23 @@ public class ControladorHechizos {
 
     public void lanzar(int indice, List<Monstruo> monstruos) {
         hechizos.get(indice).efecto(monstruos);
+    }
+
+    /*
+     * BASE DE DATOS
+     */
+    public void gardarHechizos() {
+
+        try (Session s = database.getSessionFactory().openSession()) {
+
+            s.getTransaction().begin();
+            for (Hechizo h : hechizos) {
+                s.persist(h);
+            }
+            s.getTransaction().commit();
+
+        } catch (Exception e) {
+            System.out.println("ERROR AL AÑADIR EL HECHIZO: " + e.getMessage());
+        }
     }
 }

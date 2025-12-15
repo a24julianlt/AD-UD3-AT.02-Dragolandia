@@ -24,5 +24,10 @@
         <mapping class="com.model.Bosque"/>
         <mapping class="com.model.Dragon"/>
         <mapping class="com.model.Hechizo"/>
+        <mapping class="com.model.BolaDeFuego"/>
+        <mapping class="com.model.BolaDeNieve"/>
+        <mapping class="com.model.Rayo"/>
+        <mapping class="com.model.Meteorito"/>
+
     </session-factory>
 </hibernate-configuration>
