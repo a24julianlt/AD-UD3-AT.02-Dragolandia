@@ -2,11 +2,15 @@ package com.model;
 
 import java.util.List;
 
+import jakarta.persistence.Entity;
+
+@Entity
 public class Rayo {
 
     private String nombre = "Rayo";
 
     public void efecto(List<Monstruo> monstruos) {
+        System.out.println("El mago usa " + nombre);
         if (monstruos.size() < 1) {
             System.out.println("El rayo ataca al enemigo");
         } else {

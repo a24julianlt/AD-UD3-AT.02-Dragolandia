@@ -1,38 +1,22 @@
 package com.model;
 
-import java.util.List;
-
 import jakarta.persistence.*;
 
 @Entity
-@Table(name="hechizos")
-public class Hechizo {
+@Table(name = "hechizos")
+public abstract class Hechizo {
 
-    private BolaDeFuego bolaDeFuego;
-    private Rayo rayo;
-    private BolaDeNieve bolaDeNieve;
-    private Meteorito meteorito;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
+
+    private String nombre;
 
     public Hechizo() {
-        this.bolaDeFuego = new BolaDeFuego();
-        this.rayo = new Rayo();
-        this.bolaDeNieve = new BolaDeNieve();
-        this.meteorito = new Meteorito();
+
     }
 
-    public void usarBolaDeFuego(List<Monstruo> monstruos) {
-        bolaDeFuego.efecto(monstruos);
-    }
-
-    public void usarRayo(List<Monstruo> monstruos) {
-        rayo.efecto(monstruos);
-    }
-    
-    public void usarBolaDeNieve(List<Monstruo> monstruos) {
-        bolaDeNieve.efecto(monstruos);
-    }
-
-    public void usarMeteorito(List<Monstruo> monstruos) {
-        meteorito.efecto(monstruos);
+    public String getNombre() {
+        return nombre;
     }
 }

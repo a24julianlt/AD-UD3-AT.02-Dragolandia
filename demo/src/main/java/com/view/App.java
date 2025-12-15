@@ -59,7 +59,7 @@ public class App {
         System.out.println();
 
         try {
-            Thread.sleep(3000); // 1 segundo
+            Thread.sleep(3000); // 3 segundos
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -70,7 +70,7 @@ public class App {
             System.out.println();
 
             try {
-                Thread.sleep(3000); // 1 segundo
+                Thread.sleep(3000); // 3 segundos
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -79,7 +79,7 @@ public class App {
             System.out.println();
 
             try {
-                Thread.sleep(3000); // 1 segundo
+                Thread.sleep(3000); // 3 segundos
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -93,7 +93,7 @@ public class App {
             System.out.println();
 
             try {
-                Thread.sleep(3000); // 1 segundo
+                Thread.sleep(3000); // 3 segundos
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -104,7 +104,7 @@ public class App {
             System.out.println();
 
             try {
-                Thread.sleep(3000); // 1 segundo
+                Thread.sleep(3000); // 3 segundos
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
