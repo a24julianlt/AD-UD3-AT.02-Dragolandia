@@ -1,6 +1,8 @@
 package com.model;
 
+import jakarta.persistence.Entity;
 
+@Entity
 public enum TipoMonstruo {
     ogro, troll, espectros;
 

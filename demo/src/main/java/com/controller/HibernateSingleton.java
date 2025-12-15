@@ -1,29 +1,23 @@
 package com.controller;
 
-import org.hibernate.*;
-import org.hibernate.cfg.*;
+import org.hibernate.SessionFactory;
+import org.hibernate.cfg.Configuration;
 
-class HibernateSingleton {
-    // Campo estático para almacenar la instancia única.
+public class HibernateSingleton {
     private static HibernateSingleton instance;
+    private SessionFactory sessionFactory;
 
-    // El constructor es privado para evitar llamadas directas con `new`.
     private HibernateSingleton() {
-        // Código de inicialización, como la conexión real a la base de datos.
-        SessionFactory factory = new Configuration().configure().buildSessionFactory();
-
-        try (Session session = factory.openSession();) {
-            Transaction tx = session.beginTransaction();
-
-            session.flush();
-
-            tx.getStatus();
+        try {
+            sessionFactory = new Configuration()
+                    .configure()
+                    .buildSessionFactory();
         } catch (Exception e) {
-            System.out.println("Error al conectarse a la DB: " + e.getMessage());
+            System.err.println("Error al crear SessionFactory: " + e.getMessage());
+            throw new ExceptionInInitializerError(e);
         }
     }
 
-    // Método estático que controla el acceso a la instancia del Singleton.
     public static HibernateSingleton getInstance() {
         if (instance == null) {
             synchronized (HibernateSingleton.class) {
@@ -35,4 +29,7 @@ class HibernateSingleton {
         return instance;
     }
 
+    public SessionFactory getSessionFactory() {
+        return sessionFactory;
+    }
 }

@@ -9,6 +9,7 @@ public class BolaDeFuego extends Hechizo {
 
     private String nombre = "Bola de fuego";
 
+    @Override
     public void efecto(List<Monstruo> monstruos) {
         System.out.println("El mago usa " + nombre);
         for (Monstruo mons : monstruos) {

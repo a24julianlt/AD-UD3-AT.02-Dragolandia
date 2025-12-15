@@ -5,10 +5,11 @@ import java.util.List;
 import jakarta.persistence.Entity;
 
 @Entity
-public class Rayo {
+public class Rayo extends Hechizo {
 
     private String nombre = "Rayo";
 
+    @Override
     public void efecto(List<Monstruo> monstruos) {
         System.out.println("El mago usa " + nombre);
         if (monstruos.size() < 1) {

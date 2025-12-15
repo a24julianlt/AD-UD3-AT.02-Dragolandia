@@ -12,6 +12,7 @@ public class Monstruo {
 
     private String nombre;
     private int vida;
+    @Enumerated(EnumType.STRING)
     private TipoMonstruo tipo;
     private int fuerza;
 

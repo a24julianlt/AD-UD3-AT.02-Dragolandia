@@ -51,6 +51,8 @@ public class App {
         ControladorPrincipal controller = new ControladorPrincipal();
         controller.crearPartida(nombreMago, nombreMonstruo, nombreBosque, nombreDragon);
 
+        controller.gardarMago();
+
         System.out.println();
         System.out.println("Te enfrentaras al monstruo " + nombreMonstruo + " de tipo " + controller.getTipoMons() + " por el control del bosque " + nombreBosque);
 

@@ -5,6 +5,7 @@ import com.model.Monstruo;
 
 public class ControladorBosque {
     private final Bosque bosque;
+    private final HibernateSingleton database = HibernateSingleton.getInstance();
 
 
     public ControladorBosque() {

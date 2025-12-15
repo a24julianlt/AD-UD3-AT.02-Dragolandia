@@ -5,6 +5,7 @@ import com.model.TipoMonstruo;
 
 public class ControladorMonstruo {
     private final Monstruo monstruo;
+    private final HibernateSingleton database = HibernateSingleton.getInstance();
 
     public ControladorMonstruo() {
         this.monstruo = new Monstruo();

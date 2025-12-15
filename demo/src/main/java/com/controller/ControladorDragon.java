@@ -5,6 +5,7 @@ import com.model.Dragon;
 
 public class ControladorDragon {
     private final Dragon dragon;
+    private final HibernateSingleton database = HibernateSingleton.getInstance();
 
     public ControladorDragon() {
         this.dragon = new Dragon();

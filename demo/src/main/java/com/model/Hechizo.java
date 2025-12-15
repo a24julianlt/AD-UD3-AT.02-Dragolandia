@@ -1,5 +1,7 @@
 package com.model;
 
+import java.util.List;
+
 import jakarta.persistence.*;
 
 @Entity
@@ -14,6 +16,10 @@ public abstract class Hechizo {
 
     public Hechizo() {
 
+    }
+
+    public void efecto(List<Monstruo> monstruos){
+        
     }
 
     public String getNombre() {
