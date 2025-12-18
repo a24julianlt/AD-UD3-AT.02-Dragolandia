@@ -18,7 +18,7 @@ public class Mago {
     private int nivelMagia;
 
     @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    private List<Hechizo> conjuros = new ArrayList<>();;
+    private List<Hechizo> conjuros = new ArrayList<>();
 
     public Mago() {
     }
