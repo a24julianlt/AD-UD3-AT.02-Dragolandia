@@ -1,5 +1,7 @@
 package com.controller;
 
+import org.hibernate.Session;
+
 import com.model.Monstruo;
 import com.model.TipoMonstruo;
 
@@ -11,11 +13,13 @@ public class ControladorMonstruo {
         this.monstruo = new Monstruo();
     }
 
-    public void crearMonstruo(String nombre) {
+    public Monstruo crearMonstruo(String nombre) {
         monstruo.setNombre(nombre);
         monstruo.setVida(18);
         monstruo.setFuerza(4);
         monstruo.setTipo(TipoMonstruo.random());
+        
+        return monstruo;
     }
     
 
@@ -35,4 +39,18 @@ public class ControladorMonstruo {
         return monstruo.getTipo();
     }
 
+    /*
+     * BASE DE DATOS
+     */
+    public void gardarMonstruo() {
+        try (Session s = database.getSessionFactory().openSession()) {
+
+            s.getTransaction().begin();
+            s.persist(getMonstruo());
+            s.getTransaction().commit();
+
+        } catch (Exception e) {
+            System.out.println("ERROR AL AÑADIR UN MONSTRUO: " + e.getMessage());
+        }
+    }
 }

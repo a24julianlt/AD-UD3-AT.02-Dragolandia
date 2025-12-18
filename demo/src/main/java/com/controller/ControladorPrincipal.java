@@ -1,5 +1,6 @@
 package com.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.model.Monstruo;
@@ -20,10 +21,14 @@ public class ControladorPrincipal {
         this.contrHechizos = new ControladorHechizos();
     }
 
-    public void crearPartida(String nombreMago, String nombreMons, String nombreBosque, String nombreDragon) {
-        contrMago.crearMago(nombreMago);
+    public void crearPartida(String nombreMago, List<Integer>hechizos, String nombreMons, List<String> monstruos, String nombreBosque, String nombreDragon) {
+        contrMago.crearMago(nombreMago, hechizos);
         contrMonstruo.crearMonstruo(nombreMons);
-        contrBosque.crearBosque(nombreBosque, contrMonstruo.getMonstruo());
+        List<Monstruo> monstruosBosque = new ArrayList<>();
+        for (String m : monstruos) {
+            monstruosBosque.add(contrMonstruo.crearMonstruo(m));
+        }
+        contrBosque.crearBosque(nombreBosque, contrMonstruo.getMonstruo(), monstruosBosque);
         contrDragon.crearDragon(nombreDragon, contrBosque.getBosque());
         // Los hechizos son siempre los mismo, por eso ya se crean con el inicializador
         // entonces los guardamos automáticamente
@@ -114,5 +119,17 @@ public class ControladorPrincipal {
      */
     public void gardarMago(){
         contrMago.gardarMago();
+    }
+
+    public void gardarMonstruo(){
+        contrMonstruo.gardarMonstruo();
+    }
+
+    public void gardarBosque(){
+        contrBosque.gardarBosque();
+    }
+
+    public void gardarDragon(){
+        contrDragon.gardarDragon();
     }
 }

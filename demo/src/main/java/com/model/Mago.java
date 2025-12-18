@@ -1,5 +1,6 @@
 package com.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import jakarta.persistence.*;
@@ -16,8 +17,8 @@ public class Mago {
     private int vida;
     private int nivelMagia;
 
-    @OneToMany
-    private List<Hechizo> conjuros;
+    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    private List<Hechizo> conjuros = new ArrayList<>();;
 
     public Mago() {
     }

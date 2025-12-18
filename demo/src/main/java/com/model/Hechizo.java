@@ -19,8 +19,16 @@ public abstract class Hechizo {
 
     }
 
-    public void efecto(List<Monstruo> monstruos){
-        
+    public void efecto(List<Monstruo> monstruos) {
+
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getNombre() {

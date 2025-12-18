@@ -1,15 +1,11 @@
 package com.view;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 import com.controller.*;
-import com.model.BolaDeFuego;
-import com.model.BolaDeNieve;
-import com.model.Hechizo;
-import com.model.Meteorito;
-import com.model.Rayo;
 
 public class App {
     public static void main(String[] args) {
@@ -29,53 +25,58 @@ public class App {
         System.out.println("Bienvenido, " + nombreMago);
         System.out.println();
 
-        List<String> hechizos = new ArrayList<String>();
-        Map<Integer, String> posibles = Map.of(
+        List<Integer> hechizos = new ArrayList<Integer>();
+        Map<Integer, String> posibles = new HashMap<>(Map.of(
                 1, "Bola de fuego",
                 2, "Bola de nieve",
                 3, "Rayo",
-                4, "Meteorito");
+                4, "Meteorito"));
         String opc = "";
 
+        /*
+         * 
+         * 
+         * TERMINAR SELECCIONAR HECHIZO
+         * 
+         * 
+         */
 
-/*
-
-
-TERMINAR SELECCIONAR HECHIZO
-
-*/
-
-
-
-        while (!opc.equals("0") || hechizos.size() == 4) {
+        while (!opc.equals("0")) {
             System.out.println("Elige que hechizos quieres.");
             System.out.println("Opciones: ");
-            for (int i = 1; i <= posibles.size(); i++) {
-                System.out.println(i + ". " + posibles.get(i));
+            int i = 1;
+            while (i < 5) {
+                if (posibles.get(i) != null) {
+                    System.out.println(i + ". " + posibles.get(i));
+                }
+                i++;
             }
+            System.out.println("0. Salir");
             System.out.println("Puedes tener un máximo de 4 hechizos");
-            String hechizo = sc.nextLine();
-            posibles.remove((int) Integer.parseInt(hechizo));
-            hechizos.add(hechizo);
+            opc = sc.nextLine();
+            int opcInt = (int) Integer.parseInt(opc) - 1;
+            if ((int) Integer.parseInt(opc) >= 0 && (int) Integer.parseInt(opc) < 5) {
+                if (hechizos.contains(opcInt)) {
+                    System.out.println("Ya has elegido ese hechizo");
+                } else {
+                    if (!opc.equals("0")) {
+                        posibles.remove((int) Integer.parseInt(opc));
+                        hechizos.add(opcInt);
+                    } else {
+                        continue;
+                    }
+                }
+            } else {
+                System.out.println("Nos has elegido una opción correcta");
+            }
         }
 
+        System.out.println("Hechizos elegidos");
+        hechizos.sort(null); // Ordena alfabeticamente
+        for (int h : hechizos) {
+            System.out.println(h);
+        }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        
         System.out.println("Ahora vas a nombrar a tu enemigo, un monstruo");
         System.out.println("Introduce el nombre del monstruo: ");
         String nombreMonstruo = sc.nextLine();
@@ -102,10 +103,16 @@ TERMINAR SELECCIONAR HECHIZO
             nombreDragon = sc.nextLine();
         }
 
+        List<String> monstruos = new ArrayList<>();
+        monstruos.add("Monstruo "+ nombreBosque);
+
         ControladorPrincipal controller = new ControladorPrincipal();
-        controller.crearPartida(nombreMago, nombreMonstruo, nombreBosque, nombreDragon);
+        controller.crearPartida(nombreMago, hechizos, nombreMonstruo, monstruos, nombreBosque, nombreDragon);
 
         controller.gardarMago();
+        controller.gardarMonstruo();
+        controller.gardarBosque();
+        controller.gardarDragon();
 
         System.out.println();
         System.out.println("Te enfrentaras al monstruo " + nombreMonstruo + " de tipo " + controller.getTipoMons()

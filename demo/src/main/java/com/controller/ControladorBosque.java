@@ -1,5 +1,9 @@
 package com.controller;
 
+import java.util.List;
+
+import org.hibernate.Session;
+
 import com.model.Bosque;
 import com.model.Monstruo;
 
@@ -12,10 +16,11 @@ public class ControladorBosque {
         this.bosque = new Bosque();
     }
 
-    public void crearBosque(String nombre, Monstruo monstruo) {
+    public void crearBosque(String nombre, Monstruo monstruo, List<Monstruo> monstruosBosque) {
         bosque.setNombre(nombre);
         bosque.setMonstruoJefe(monstruo);
         bosque.setNivelPeligro(5);
+        bosque.setMonstruosBosque(monstruosBosque);
     }
 
     public Bosque getBosque() {
@@ -32,5 +37,20 @@ public class ControladorBosque {
 
     public Monstruo getMontruoJefe() {
         return bosque.getMonstruoJefe();
+    }
+
+    /*
+     * BASE DE DATOS
+     */
+    public void gardarBosque() {
+        try (Session s = database.getSessionFactory().openSession()) {
+
+            s.getTransaction().begin();
+            s.persist(getBosque());
+            s.getTransaction().commit();
+
+        } catch (Exception e) {
+            System.out.println("ERROR AL AÑADIR UN BOSQUE: " + e.getMessage());
+        }
     }
 }

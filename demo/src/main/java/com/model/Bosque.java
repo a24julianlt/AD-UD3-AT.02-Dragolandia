@@ -18,16 +18,17 @@ public class Bosque {
     @OneToOne
     private Monstruo monstruoJefe;
 
-    @OneToMany
-    private List<Monstruo> mosntruos;
+    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    private List<Monstruo> monstruos;
 
     public Bosque() {
     }
 
-    public Bosque(String nombre, int nivelPeligro, Monstruo monstruoJefe) {
+    public Bosque(String nombre, int nivelPeligro, Monstruo monstruoJefe, List<Monstruo> monstruosBosque) {
         this.nombre = nombre;
         this.nivelPeligro = nivelPeligro;
         this.monstruoJefe = monstruoJefe;
+        this.monstruos = monstruosBosque;
     }
 
     public int getId() {
@@ -62,6 +63,9 @@ public class Bosque {
         this.monstruoJefe = monstruoJefe;
     }
 
+    public void setMonstruosBosque(List<Monstruo> monstruos) {
+        this.monstruos = monstruos;
+    }
     
     public void cambiarJefe(Monstruo monstruoNuevo) {
         this.monstruoJefe = monstruoNuevo;

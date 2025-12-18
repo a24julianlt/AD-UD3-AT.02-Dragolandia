@@ -31,6 +31,10 @@ public class ControladorHechizos {
         hechizos.get(indice).efecto(monstruos);
     }
 
+    public Hechizo getHechizo(int i) {
+        return hechizos.get(i);
+    }
+
     /*
      * BASE DE DATOS
      */
@@ -39,9 +43,20 @@ public class ControladorHechizos {
         try (Session s = database.getSessionFactory().openSession()) {
 
             s.getTransaction().begin();
+
             for (Hechizo h : hechizos) {
-                s.persist(h);
+                Hechizo existente = s.createQuery(
+                        "SELECT h FROM Hechizo h WHERE h.nombre = :nombre",
+                        Hechizo.class).setParameter("nombre", h.getNombre())
+                        .getResultStream()
+                        .findFirst()
+                        .orElse(null);
+
+                if (existente != null) {
+                    h.setId(existente.getId());
+                }
             }
+            
             s.getTransaction().commit();
 
         } catch (Exception e) {
