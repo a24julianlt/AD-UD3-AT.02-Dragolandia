@@ -68,4 +68,19 @@ public class ControladorBosque {
             System.out.println("ERROR AL ELIMINAR UN BOSQUE: " + e.getMessage());
         }
     }
+
+    public void listarBosques() {
+        try (Session s = database.getSessionFactory().openSession()) {
+
+            s.getTransaction().begin();
+            
+
+
+            
+            s.getTransaction().commit();
+
+        } catch (Exception e) {
+            System.out.println("ERROR AL ELIMINAR UN BOSQUE: " + e.getMessage());
+        }
+    }
 }
