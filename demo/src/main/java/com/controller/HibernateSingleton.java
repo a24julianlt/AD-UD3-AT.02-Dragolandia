@@ -18,6 +18,10 @@ public class HibernateSingleton {
         }
     }
 
+    /*
+     * Cambiar clase para usar EntityManager en vez de sessionFactory
+     */
+
     public static HibernateSingleton getInstance() {
         if (instance == null) {
             synchronized (HibernateSingleton.class) {

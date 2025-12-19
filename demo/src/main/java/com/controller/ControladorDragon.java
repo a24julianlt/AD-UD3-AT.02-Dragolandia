@@ -27,15 +27,27 @@ public class ControladorDragon {
     /*
      * BASE DE DATOS
      */
-    public void gardarDragon() {
+    public void gardarDragon(Dragon dragon) {
         try (Session s = database.getSessionFactory().openSession()) {
 
             s.getTransaction().begin();
-            s.persist(getDragon());
+            s.persist(dragon);
             s.getTransaction().commit();
 
         } catch (Exception e) {
             System.out.println("ERROR AL AÑADIR UN DRAGON: " + e.getMessage());
+        }
+    }
+
+    public void eliminarDragon(Dragon dragon) {
+        try (Session s = database.getSessionFactory().openSession()) {
+
+            s.getTransaction().begin();
+            s.remove(dragon);
+            s.getTransaction().commit();
+
+        } catch (Exception e) {
+            System.out.println("ERROR AL ELIMINAR UN DRAGON: " + e.getMessage());
         }
     }
 }

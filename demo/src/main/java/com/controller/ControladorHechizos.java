@@ -63,4 +63,5 @@ public class ControladorHechizos {
             System.out.println("ERROR AL AÑADIR EL HECHIZO: " + e.getMessage());
         }
     }
+
 }

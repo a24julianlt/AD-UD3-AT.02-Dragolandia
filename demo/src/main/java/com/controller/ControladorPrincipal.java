@@ -21,12 +21,13 @@ public class ControladorPrincipal {
         this.contrHechizos = new ControladorHechizos();
     }
 
-    public void crearPartida(String nombreMago, List<Integer>hechizos, String nombreMons, List<String> monstruos, String nombreBosque, String nombreDragon) {
+    public void crearPartida(String nombreMago, List<Integer> hechizos, String nombreMons, List<String> monstruos,
+            String nombreBosque, String nombreDragon) {
         contrMago.crearMago(nombreMago, hechizos);
         contrMonstruo.crearMonstruo(nombreMons);
         List<Monstruo> monstruosBosque = new ArrayList<>();
         for (String m : monstruos) {
-            monstruosBosque.add(contrMonstruo.crearMonstruo(m));
+            monstruosBosque.add(contrMonstruo.newMonstruo(m));
         }
         contrBosque.crearBosque(nombreBosque, contrMonstruo.getMonstruo(), monstruosBosque);
         contrDragon.crearDragon(nombreDragon, contrBosque.getBosque());
@@ -117,19 +118,23 @@ public class ControladorPrincipal {
     /*
      * BASE DE DATOS
      */
-    public void gardarMago(){
-        contrMago.gardarMago();
+    public void gardarMago() {
+        contrMago.gardarMago(contrMago.getMago());
     }
 
-    public void gardarMonstruo(){
-        contrMonstruo.gardarMonstruo();
+    public void gardarMonstruo() {
+        contrMonstruo.gardarMonstruo(contrMonstruo.getMonstruo());
     }
 
-    public void gardarBosque(){
-        contrBosque.gardarBosque();
+    public void gardarListaMonstruo(List<Monstruo> monstruos) {
+        for (Monstruo m : monstruos) contrMonstruo.gardarMonstruo(m);
     }
 
-    public void gardarDragon(){
-        contrDragon.gardarDragon();
+    public void gardarBosque() {
+        contrBosque.gardarBosque(contrBosque.getBosque());
+    }
+
+    public void gardarDragon() {
+        contrDragon.gardarDragon(contrDragon.getDragon());
     }
 }

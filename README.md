@@ -63,6 +63,7 @@ classDiagram
 
         +ControladorMonstruo()
         +crearMonstruo(String nombre)
+        +newMonstruo(String nombre)
         +gardarMonstruo()
     }
 

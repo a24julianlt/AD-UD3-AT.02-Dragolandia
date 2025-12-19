@@ -11,7 +11,6 @@ public class ControladorBosque {
     private final Bosque bosque;
     private final HibernateSingleton database = HibernateSingleton.getInstance();
 
-
     public ControladorBosque() {
         this.bosque = new Bosque();
     }
@@ -42,15 +41,27 @@ public class ControladorBosque {
     /*
      * BASE DE DATOS
      */
-    public void gardarBosque() {
+    public void gardarBosque(Bosque bosque) {
         try (Session s = database.getSessionFactory().openSession()) {
 
             s.getTransaction().begin();
-            s.persist(getBosque());
+            s.persist(bosque);
             s.getTransaction().commit();
 
         } catch (Exception e) {
             System.out.println("ERROR AL AÑADIR UN BOSQUE: " + e.getMessage());
+        }
+    }
+
+    public void eliminarBosque(Bosque bosque) {
+        try (Session s = database.getSessionFactory().openSession()) {
+
+            s.getTransaction().begin();
+            s.remove(bosque);
+            s.getTransaction().commit();
+
+        } catch (Exception e) {
+            System.out.println("ERROR AL ELIMINAR UN BOSQUE: " + e.getMessage());
         }
     }
 }

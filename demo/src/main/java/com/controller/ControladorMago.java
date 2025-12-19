@@ -44,15 +44,27 @@ public class ControladorMago {
     /*
      * BASE DE DATOS
      */
-    public void gardarMago() {
+    public void gardarMago(Mago mago) {
         try (Session s = database.getSessionFactory().openSession()) {
 
             s.getTransaction().begin();
-            s.persist(getMago());
+            s.persist(mago);
             s.getTransaction().commit();
 
         } catch (Exception e) {
             System.out.println("ERROR AL AÑADIR UN MAGO: " + e.getMessage());
+        }
+    }
+
+    public void eliminarMago(Mago mago) {
+        try (Session s = database.getSessionFactory().openSession()) {
+
+            s.getTransaction().begin();
+            s.remove(mago);
+            s.getTransaction().commit();
+
+        } catch (Exception e) {
+            System.out.println("ERROR AL BORRAR UN MAGO: " + e.getMessage());
         }
     }
 }

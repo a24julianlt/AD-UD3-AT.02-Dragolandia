@@ -54,21 +54,32 @@ public class App {
             System.out.println("0. Salir");
             System.out.println("Puedes tener un máximo de 4 hechizos");
             opc = sc.nextLine();
-            int opcInt = (int) Integer.parseInt(opc) - 1;
-            if ((int) Integer.parseInt(opc) >= 0 && (int) Integer.parseInt(opc) < 5) {
-                if (hechizos.contains(opcInt)) {
-                    System.out.println("Ya has elegido ese hechizo");
-                } else {
-                    if (!opc.equals("0")) {
-                        posibles.remove((int) Integer.parseInt(opc));
-                        hechizos.add(opcInt);
-                    } else {
-                        continue;
-                    }
-                }
-            } else {
-                System.out.println("Nos has elegido una opción correcta");
+            while (opc.trim().isEmpty()) {
+                System.out.println("No has introducido nada, vuelve a introducir el codigo del hechizo, por favor: ");
+                opc = sc.nextLine();
+
             }
+
+            try {
+                int opcInt = (int) Integer.parseInt(opc) - 1;
+                if ((int) Integer.parseInt(opc) >= 0 && (int) Integer.parseInt(opc) < 5) {
+                    if (hechizos.contains(opcInt)) {
+                        System.out.println("Ya has elegido ese hechizo");
+                    } else {
+                        if (!opc.equals("0")) {
+                            posibles.remove((int) Integer.parseInt(opc));
+                            hechizos.add(opcInt);
+                        } else {
+                            continue;
+                        }
+                    }
+                } else {
+                    System.out.println("Nos has elegido una opción correcta");
+                }
+            } catch (Exception e) {
+                System.out.println("Introduce el código numérico, no letras");
+            }
+
         }
 
         System.out.println("Hechizos elegidos");
@@ -76,6 +87,8 @@ public class App {
         for (int h : hechizos) {
             System.out.println(h);
         }
+
+        System.out.println();
 
         System.out.println("Ahora vas a nombrar a tu enemigo, un monstruo");
         System.out.println("Introduce el nombre del monstruo: ");
@@ -104,7 +117,7 @@ public class App {
         }
 
         List<String> monstruos = new ArrayList<>();
-        monstruos.add("Monstruo "+ nombreBosque);
+        monstruos.add("Monstruo " + nombreBosque);
 
         ControladorPrincipal controller = new ControladorPrincipal();
         controller.crearPartida(nombreMago, hechizos, nombreMonstruo, monstruos, nombreBosque, nombreDragon);
