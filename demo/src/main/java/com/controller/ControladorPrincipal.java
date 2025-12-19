@@ -52,6 +52,10 @@ public class ControladorPrincipal {
         return contrMonstruo.getTipo();
     }
 
+    public List<Monstruo> getListMonstruos() {
+        return contrBosque.getMonstruos();
+    }
+
     public String getHechizo(String hechizo) {
         String devolver = "";
         switch (hechizo.toLowerCase()) {
@@ -136,5 +140,25 @@ public class ControladorPrincipal {
 
     public void gardarDragon() {
         contrDragon.gardarDragon(contrDragon.getDragon());
+    }
+
+    public void eliminarMago() {
+        contrMago.eliminarMago(contrMago.getMago());
+    }
+
+    public void eliminarMonstruo() {
+        contrMonstruo.eliminarMonstruo(contrMonstruo.getMonstruo());
+    }
+
+    public void eliminarListaMonstruo(List<Monstruo> monstruos) {
+        for (Monstruo m : monstruos) contrMonstruo.eliminarMonstruo(m);
+    }
+
+    public void eliminarBosque() {
+        contrBosque.eliminarBosque(contrBosque.getBosque());
+    }
+
+    public void eliminarDragon() {
+        contrDragon.eliminarDragon(contrDragon.getDragon());
     }
 }

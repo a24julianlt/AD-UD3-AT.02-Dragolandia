@@ -38,6 +38,10 @@ public class ControladorBosque {
         return bosque.getMonstruoJefe();
     }
 
+    public List<Monstruo> getMonstruos() {
+        return bosque.getMonstruosBosque();
+    }
+
     /*
      * BASE DE DATOS
      */

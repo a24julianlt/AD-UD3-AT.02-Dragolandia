@@ -63,6 +63,10 @@ public class Bosque {
         this.monstruoJefe = monstruoJefe;
     }
 
+    public List<Monstruo> getMonstruosBosque() {
+        return monstruos;
+    }
+
     public void setMonstruosBosque(List<Monstruo> monstruos) {
         this.monstruos = monstruos;
     }

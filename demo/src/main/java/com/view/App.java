@@ -197,6 +197,18 @@ public class App {
             System.out.println("El monstruo " + nombreMonstruo + " sigue siendo el dueño del bosque");
         }
 
+        System.out.println();
+
+        /*
+         * Prueba para ver si elimina
+         */
+        controller.eliminarDragon();
+        controller.eliminarBosque();
+        controller.eliminarListaMonstruo(controller.getListMonstruos());
+        controller.eliminarMonstruo();
+        // eliminar hechizos
+        controller.eliminarMago();
+
         sc.close();
     }
 }
