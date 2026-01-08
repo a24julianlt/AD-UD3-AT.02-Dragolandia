@@ -2,14 +2,15 @@ package com.controller;
 
 import java.util.List;
 
-import org.hibernate.Session;
-
 import com.model.BolaDeFuego;
 import com.model.BolaDeNieve;
 import com.model.Hechizo;
 import com.model.Meteorito;
 import com.model.Monstruo;
 import com.model.Rayo;
+
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityTransaction;
 
 public class ControladorHechizos {
     private final List<Hechizo> hechizos;
@@ -39,13 +40,15 @@ public class ControladorHechizos {
      * BASE DE DATOS
      */
     public void gardarHechizos() {
+        EntityManager em = database.getEntityManager();
 
-        try (Session s = database.getSessionFactory().openSession()) {
+        try {
+            EntityTransaction tx = em.getTransaction();
 
-            s.getTransaction().begin();
+            tx.begin();
 
             for (Hechizo h : hechizos) {
-                Hechizo existente = s.createQuery(
+                Hechizo existente = em.createQuery(
                         "SELECT h FROM Hechizo h WHERE h.nombre = :nombre",
                         Hechizo.class).setParameter("nombre", h.getNombre())
                         .getResultStream()
@@ -57,11 +60,73 @@ public class ControladorHechizos {
                 }
             }
             
-            s.getTransaction().commit();
+            tx.commit();
 
         } catch (Exception e) {
             System.out.println("ERROR AL AÑADIR EL HECHIZO: " + e.getMessage());
+        } finally {
+            if (em.isOpen())
+                em.close();
         }
     }
 
+    public void eliminarHechizo(Hechizo hechizo) {
+        EntityManager em = database.getEntityManager();
+
+        try {
+            EntityTransaction tx = em.getTransaction();
+
+            tx.begin();
+
+            em.remove(hechizo);
+            
+            tx.commit();
+
+        } catch (Exception e) {
+            System.out.println("ERROR AL ELIMINAR EL HECHIZO: " + e.getMessage());
+        } finally {
+            if (em.isOpen())
+                em.close();
+        }
+    }
+
+    public void actualizarHechizo(Hechizo hechizo) {
+        EntityManager em = database.getEntityManager();
+
+        try {
+            EntityTransaction tx = em.getTransaction();
+
+            tx.begin();
+
+            em.merge(hechizo);
+            
+            tx.commit();
+
+        } catch (Exception e) {
+            System.out.println("ERROR AL ACTUALIZAR EL HECHIZO: " + e.getMessage());
+        } finally {
+            if (em.isOpen())
+                em.close();
+        }
+    }
+
+    public void listarHechizos(Hechizo hechizo) {
+        EntityManager em = database.getEntityManager();
+
+        try {
+            EntityTransaction tx = em.getTransaction();
+
+            tx.begin();
+
+            em.createQuery("select * from Hechizos", Hechizo.class).getResultList();
+            
+            tx.commit();
+
+        } catch (Exception e) {
+            System.out.println("ERROR AL LISTAR LOS HECHIZOS: " + e.getMessage());
+        } finally {
+            if (em.isOpen())
+                em.close();
+        }
+    }
 }

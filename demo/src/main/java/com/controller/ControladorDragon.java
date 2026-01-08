@@ -1,9 +1,10 @@
 package com.controller;
 
-import org.hibernate.Session;
-
 import com.model.Bosque;
 import com.model.Dragon;
+
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityTransaction;
 
 public class ControladorDragon {
     private final Dragon dragon;
@@ -28,26 +29,70 @@ public class ControladorDragon {
      * BASE DE DATOS
      */
     public void gardarDragon(Dragon dragon) {
-        try (Session s = database.getSessionFactory().openSession()) {
+        EntityManager em = database.getEntityManager();
 
-            s.getTransaction().begin();
-            s.persist(dragon);
-            s.getTransaction().commit();
+        try {
+            EntityTransaction tx = em.getTransaction();
+
+            tx.begin();
+            em.persist(dragon);
+            tx.commit();
 
         } catch (Exception e) {
             System.out.println("ERROR AL AÑADIR UN DRAGON: " + e.getMessage());
+        } finally {
+            if (em.isOpen()) em.close();
         }
     }
 
     public void eliminarDragon(Dragon dragon) {
-        try (Session s = database.getSessionFactory().openSession()) {
+        EntityManager em = database.getEntityManager();
 
-            s.getTransaction().begin();
-            s.remove(dragon);
-            s.getTransaction().commit();
+        try {
+            EntityTransaction tx = em.getTransaction();
+
+            tx.begin();
+            em.remove(dragon);
+            tx.commit();
 
         } catch (Exception e) {
             System.out.println("ERROR AL ELIMINAR UN DRAGON: " + e.getMessage());
+        } finally {
+            if (em.isOpen()) em.close();
+        }
+    }
+
+    public void actualizarDragon(Dragon dragon) {
+        EntityManager em = database.getEntityManager();
+
+        try {
+            EntityTransaction tx = em.getTransaction();
+
+            tx.begin();
+            em.remove(dragon);
+            tx.commit();
+
+        } catch (Exception e) {
+            System.out.println("ERROR AL ACTUALIZAR UN DRAGON: " + e.getMessage());
+        } finally {
+            if (em.isOpen()) em.close();
+        }
+    }
+
+    public void listarDragones() {
+        EntityManager em = database.getEntityManager();
+
+        try {
+            EntityTransaction tx = em.getTransaction();
+
+            tx.begin();
+            em.createQuery("select * from Dragon", Dragon.class).getResultList();
+            tx.commit();
+
+        } catch (Exception e) {
+            System.out.println("ERROR AL LISTAR LOS DRAGONES: " + e.getMessage());
+        } finally {
+            if (em.isOpen()) em.close();
         }
     }
 }

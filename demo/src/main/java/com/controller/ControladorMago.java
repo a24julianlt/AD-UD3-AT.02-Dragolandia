@@ -2,9 +2,10 @@ package com.controller;
 
 import com.model.Mago;
 
-import java.util.List;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityTransaction;
 
-import org.hibernate.Session;
+import java.util.List;
 
 public class ControladorMago {
     private final Mago mago;
@@ -16,7 +17,7 @@ public class ControladorMago {
         this.contrHechizos = new ControladorHechizos();
     }
 
-    public void crearMago(String nombre, List<Integer>hechizos) {
+    public void crearMago(String nombre, List<Integer> hechizos) {
         mago.setNombre(nombre);
         mago.setVida(20);
         mago.setNivelMagia(5);
@@ -45,26 +46,74 @@ public class ControladorMago {
      * BASE DE DATOS
      */
     public void gardarMago(Mago mago) {
-        try (Session s = database.getSessionFactory().openSession()) {
+        EntityManager em = database.getEntityManager();
 
-            s.getTransaction().begin();
-            s.persist(mago);
-            s.getTransaction().commit();
+        try {
+            EntityTransaction tx = em.getTransaction();
+
+            tx.begin();
+            em.persist(mago);
+            tx.commit();
 
         } catch (Exception e) {
             System.out.println("ERROR AL AÑADIR UN MAGO: " + e.getMessage());
+        } finally {
+            if (em.isOpen())
+                em.close();
         }
     }
 
     public void eliminarMago(Mago mago) {
-        try (Session s = database.getSessionFactory().openSession()) {
+        EntityManager em = database.getEntityManager();
 
-            s.getTransaction().begin();
-            s.remove(mago);
-            s.getTransaction().commit();
+        try {
+            EntityTransaction tx = em.getTransaction();
+
+            tx.begin();
+            em.remove(mago);
+            tx.commit();
 
         } catch (Exception e) {
             System.out.println("ERROR AL BORRAR UN MAGO: " + e.getMessage());
+        } finally {
+            if (em.isOpen())
+                em.close();
+        }
+    }
+
+    public void actualizarMago(Mago mago) {
+        EntityManager em = database.getEntityManager();
+
+        try {
+            EntityTransaction tx = em.getTransaction();
+
+            tx.begin();
+            em.merge(mago);
+            tx.commit();
+
+        } catch (Exception e) {
+            System.out.println("ERROR AL ACTUALIZAR UN MAGO: " + e.getMessage());
+        } finally {
+            if (em.isOpen())
+                em.close();
+        }
+    }
+
+    public void ListarMagos() {
+        EntityManager em = database.getEntityManager();
+
+        try {
+            EntityTransaction tx = em.getTransaction();
+
+            tx.begin();
+            em.createQuery("select * from Mago", Mago.class).getResultList();
+            tx.commit();
+
+        } catch (Exception e) {
+            System.out.println("ERROR AL LISTAR LOS MAGOS: " + e.getMessage());
+        } finally {
+            if (em.isOpen())
+                em.close();
         }
     }
 }

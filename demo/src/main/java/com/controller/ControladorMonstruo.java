@@ -1,9 +1,10 @@
 package com.controller;
 
-import org.hibernate.Session;
-
 import com.model.Monstruo;
 import com.model.TipoMonstruo;
+
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityTransaction;
 
 public class ControladorMonstruo {
     private final Monstruo monstruo;
@@ -46,26 +47,70 @@ public class ControladorMonstruo {
      * BASE DE DATOS
      */
     public void gardarMonstruo(Monstruo monstruo) {
-        try (Session s = database.getSessionFactory().openSession()) {
+        EntityManager em = database.getEntityManager();
 
-            s.getTransaction().begin();
-            s.persist(monstruo);
-            s.getTransaction().commit();
+        try {
+            EntityTransaction tx = em.getTransaction();
+
+            tx.begin();
+            em.persist(monstruo);
+            tx.commit();
 
         } catch (Exception e) {
             System.out.println("ERROR AL AÑADIR UN MONSTRUO: " + e.getMessage());
+        } finally {
+            if (em.isOpen()) em.close();
         }
     }
 
     public void eliminarMonstruo(Monstruo monstruo) {
-        try (Session s = database.getSessionFactory().openSession()) {
+        EntityManager em = database.getEntityManager();
 
-            s.getTransaction().begin();
-            s.remove(monstruo);
-            s.getTransaction().commit();
+        try {
+            EntityTransaction tx = em.getTransaction();
+
+            tx.begin();
+            em.remove(monstruo);
+            tx.commit();
 
         } catch (Exception e) {
             System.out.println("ERROR AL ELIMINAR UN MONSTRUO: " + e.getMessage());
+        } finally {
+            if (em.isOpen()) em.close();
+        }
+    }
+
+    public void actualizarMonstruo(Monstruo monstruo) {
+        EntityManager em = database.getEntityManager();
+
+        try {
+            EntityTransaction tx = em.getTransaction();
+
+            tx.begin();
+            em.merge(monstruo);
+            tx.commit();
+
+        } catch (Exception e) {
+            System.out.println("ERROR AL ACTUALIZAR UN MONSTRUO: " + e.getMessage());
+        } finally {
+            if (em.isOpen()) em.close();
+        }
+    }
+
+    public void listarMonstruos() {
+        EntityManager em = database.getEntityManager();
+
+        try {
+            EntityTransaction tx = em.getTransaction();
+
+            tx.begin();
+            em.createQuery("select * from Monstruo", Monstruo.class).getResultList();
+            tx.commit();
+
+        } catch (Exception e) {
+            System.out.println("ERROR AL LISTAR LOS MONSTRUOS: " + e.getMessage());
+        } finally {
+            if (em.isOpen()) em.close();
         }
     }
 }

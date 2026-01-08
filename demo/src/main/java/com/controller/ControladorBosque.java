@@ -2,10 +2,11 @@ package com.controller;
 
 import java.util.List;
 
-import org.hibernate.Session;
-
 import com.model.Bosque;
 import com.model.Monstruo;
+
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityTransaction;
 
 public class ControladorBosque {
     private final Bosque bosque;
@@ -46,41 +47,70 @@ public class ControladorBosque {
      * BASE DE DATOS
      */
     public void gardarBosque(Bosque bosque) {
-        try (Session s = database.getSessionFactory().openSession()) {
+        EntityManager em = database.getEntityManager();
+        try {
+            EntityTransaction tx = em.getTransaction();
 
-            s.getTransaction().begin();
-            s.persist(bosque);
-            s.getTransaction().commit();
+            tx.begin();
+            em.persist(bosque);
+            tx.commit();
 
         } catch (Exception e) {
             System.out.println("ERROR AL AÑADIR UN BOSQUE: " + e.getMessage());
+        } finally {
+            if (em.isOpen())
+                em.close();
         }
     }
 
     public void eliminarBosque(Bosque bosque) {
-        try (Session s = database.getSessionFactory().openSession()) {
+        EntityManager em = database.getEntityManager();
+        try {
+            EntityTransaction tx = em.getTransaction();
 
-            s.getTransaction().begin();
-            s.remove(bosque);
-            s.getTransaction().commit();
+            tx.begin();
+            em.remove(bosque);
+            tx.commit();
 
         } catch (Exception e) {
             System.out.println("ERROR AL ELIMINAR UN BOSQUE: " + e.getMessage());
+        } finally {
+            if (em.isOpen())
+                em.close();
+        }
+    }
+
+    public void actualzarBosque(Bosque bosque) {
+        EntityManager em = database.getEntityManager();
+        try {
+            EntityTransaction tx = em.getTransaction();
+
+            tx.begin();
+            em.merge(bosque);
+            tx.commit();
+
+        } catch (Exception e) {
+            System.out.println("ERROR AL ACTULIZAR UN BOSQUE: " + e.getMessage());
+        } finally {
+            if (em.isOpen())
+                em.close();
         }
     }
 
     public void listarBosques() {
-        try (Session s = database.getSessionFactory().openSession()) {
+        EntityManager em = database.getEntityManager();
 
-            s.getTransaction().begin();
-            
+        try {
+            EntityTransaction tx = em.getTransaction();
 
-
-            
-            s.getTransaction().commit();
+            tx.begin();
+            em.createQuery("select * from Bosque", Bosque.class).getResultList();
+            tx.commit();
 
         } catch (Exception e) {
-            System.out.println("ERROR AL ELIMINAR UN BOSQUE: " + e.getMessage());
+            System.out.println("ERROR AL LISTAR LOS BOSQUES: " + e.getMessage());
+        } finally {
+            if (em.isOpen()) em.close();
         }
     }
 }
