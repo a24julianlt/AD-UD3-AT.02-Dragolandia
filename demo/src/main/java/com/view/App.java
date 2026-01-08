@@ -15,23 +15,32 @@ public class App {
         System.out.println();
         System.out.println("¡¡Vamos a crear los magos y los monstruos del bosque!!");
         System.out.println();
-        System.out.println("¿Cuantos magos quieres crear?: ");
-        String nombreMago = sc.nextLine();
-        while (nombreMago.trim().isEmpty()) {
-            System.out.println("Vuelve a introducir tu nombre, por favor: ");
-            nombreMago = sc.nextLine();
+        System.out.println("¿Cuantos magos quieres crear?: min 2");
+        int nMagos = sc.nextInt();
+        sc.nextLine();
+
+        if (nMagos < 2) nMagos = 2;
+
+        Map<String, List<Integer>> MagosYHechizos = new HashMap<>();
+
+        List<String> magos = new ArrayList<String>();
+        for (int i = 0; i < nMagos; i++) {
+            System.out.println("Introduce el nombre del mago -" + i);
+            String nombreMago = sc.nextLine();
+            while (nombreMago.trim().isEmpty()) {
+                System.out.println("Vuelve a introducir tu nombre, por favor: ");
+                nombreMago = sc.nextLine();
+            }
+            System.out.println("Bienvenido, " + nombreMago);
+            System.out.println();
+            magos.add(nombreMago);
+
+            elegirHechizos(sc, nombreMago);
         }
 
-        System.out.println("Bienvenido, " + nombreMago);
         System.out.println();
 
-        List<Integer> hechizos = new ArrayList<Integer>();
-        Map<Integer, String> posibles = new HashMap<>(Map.of(
-                1, "Bola de fuego",
-                2, "Bola de nieve",
-                3, "Rayo",
-                4, "Meteorito"));
-        String opc = "";
+        
 
         /*
          * 
@@ -40,53 +49,6 @@ public class App {
          * 
          * 
          */
-
-        while (!opc.equals("0")) {
-            System.out.println("Elige que hechizos quieres.");
-            System.out.println("Opciones: ");
-            int i = 1;
-            while (i < 5) {
-                if (posibles.get(i) != null) {
-                    System.out.println(i + ". " + posibles.get(i));
-                }
-                i++;
-            }
-            System.out.println("0. Salir");
-            System.out.println("Puedes tener un máximo de 4 hechizos");
-            opc = sc.nextLine();
-            while (opc.trim().isEmpty()) {
-                System.out.println("No has introducido nada, vuelve a introducir el codigo del hechizo, por favor: ");
-                opc = sc.nextLine();
-
-            }
-
-            try {
-                int opcInt = (int) Integer.parseInt(opc) - 1;
-                if ((int) Integer.parseInt(opc) >= 0 && (int) Integer.parseInt(opc) < 5) {
-                    if (hechizos.contains(opcInt)) {
-                        System.out.println("Ya has elegido ese hechizo");
-                    } else {
-                        if (!opc.equals("0")) {
-                            posibles.remove((int) Integer.parseInt(opc));
-                            hechizos.add(opcInt);
-                        } else {
-                            continue;
-                        }
-                    }
-                } else {
-                    System.out.println("Nos has elegido una opción correcta");
-                }
-            } catch (Exception e) {
-                System.out.println("Introduce el código numérico, no letras");
-            }
-
-        }
-
-        System.out.println("Hechizos elegidos");
-        hechizos.sort(null); // Ordena alfabeticamente
-        for (int h : hechizos) {
-            System.out.println(h);
-        }
 
         System.out.println();
 
@@ -120,7 +82,7 @@ public class App {
         monstruos.add("Monstruo " + nombreBosque);
 
         ControladorPrincipal controller = new ControladorPrincipal();
-        controller.crearPartida(nombreMago, hechizos, nombreMonstruo, monstruos, nombreBosque, nombreDragon);
+        //controller.crearPartida(nombreMago, hechizos, nombreMonstruo, monstruos, nombreBosque, nombreDragon);
 
         controller.gardarMago();
         controller.gardarMonstruo();
@@ -210,5 +172,72 @@ public class App {
         controller.eliminarMago();
 
         sc.close();
+    }
+
+    /**
+     * Función para elegir los hechizos de cada mago
+     * @param mago nombre del mago
+     * @return map de los hechizos de cada mago, clave nombre del mago y list de hechizos
+     */
+    public Map<String, List<Integer>> elegirHechizos(Scanner sc, String mago) {
+        List<Integer> hechizos = new ArrayList<Integer>();
+        Map<Integer, String> posibles = new HashMap<>(Map.of(
+                1, "Bola de fuego",
+                2, "Bola de nieve",
+                3, "Rayo",
+                4, "Meteorito"));
+        String opc = "";
+
+        while (!opc.equals("0")) {
+            System.out.println("Elige que hechizos quieres.");
+            System.out.println("Opciones: ");
+            int i = 1;
+            while (i < 5) {
+                if (posibles.get(i) != null) {
+                    System.out.println(i + ". " + posibles.get(i));
+                }
+                i++;
+            }
+            System.out.println("0. Salir");
+            System.out.println("Puedes tener un máximo de 4 hechizos");
+            opc = sc.nextLine();
+            while (opc.trim().isEmpty()) {
+                System.out.println("No has introducido nada, vuelve a introducir el codigo del hechizo, por favor: ");
+                opc = sc.nextLine();
+            }
+
+            try {
+                int opcInt = (int) Integer.parseInt(opc) - 1;
+                if ((int) Integer.parseInt(opc) >= 0 && (int) Integer.parseInt(opc) < 5) {
+                    if (hechizos.contains(opcInt)) {
+                        System.out.println("Ya has elegido ese hechizo");
+                    } else {
+                        if (!opc.equals("0")) {
+                            posibles.remove((int) Integer.parseInt(opc));
+                            hechizos.add(opcInt);
+                        } else {
+                            continue;
+                        }
+                    }
+                } else {
+                    System.out.println("Nos has elegido una opción correcta");
+                }
+            } catch (Exception e) {
+                System.out.println("Introduce el código numérico, no letras");
+            }
+
+        }
+
+        System.out.println("Hechizos elegidos");
+        hechizos.sort(null); // Ordena alfabeticamente
+        for (int h : hechizos) {
+            System.out.println(h);
+        }
+
+        Map<String, List<Integer>> magosYHechizos = new HashMap<>();
+
+        magosYHechizos.put("", hechizos);
+
+        return magosYHechizos;
     }
 }
