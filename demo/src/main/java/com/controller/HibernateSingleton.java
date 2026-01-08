@@ -1,21 +1,15 @@
 package com.controller;
 
-import org.hibernate.SessionFactory;
-import org.hibernate.cfg.Configuration;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityManagerFactory;
+import jakarta.persistence.Persistence;
 
 public class HibernateSingleton {
     private static HibernateSingleton instance;
-    private SessionFactory sessionFactory;
+    private EntityManagerFactory emf;
 
     private HibernateSingleton() {
-        try {
-            sessionFactory = new Configuration()
-                    .configure()
-                    .buildSessionFactory();
-        } catch (Exception e) {
-            System.err.println("Error al crear SessionFactory: " + e.getMessage());
-            throw new ExceptionInInitializerError(e);
-        }
+        this.emf = Persistence.createEntityManagerFactory("dragolandiaServizo");
     }
 
     /*
@@ -33,7 +27,13 @@ public class HibernateSingleton {
         return instance;
     }
 
-    public SessionFactory getSessionFactory() {
-        return sessionFactory;
+    public EntityManager getEntityManager() {
+        return emf.createEntityManager();
+    }
+
+    public void close() {
+        if (emf != null && emf.isOpen()) {
+            emf.close();
+        }
     }
 }
