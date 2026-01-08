@@ -105,7 +105,7 @@ public class ControladorPrincipal {
     }
 
     public void atacaMago() {
-        contrMago.getMago().lanzarhechizo(contrMonstruo.getMonstruo());
+        contrMago.getMago().lanzarHechizo(contrMonstruo.getMonstruo());
     }
 
     public void atacaMons() {

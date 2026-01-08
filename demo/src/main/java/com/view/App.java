@@ -13,9 +13,9 @@ public class App {
 
         System.out.println("BIENVENIDO AL JUEGO");
         System.out.println();
-        System.out.println("¡¡Eres un mago y vas a pelear contra poderosos monstruos!!");
+        System.out.println("¡¡Vamos a crear los magos y los monstruos del bosque!!");
         System.out.println();
-        System.out.println("Introduce tu nombre: ");
+        System.out.println("¿Cuantos magos quieres crear?: ");
         String nombreMago = sc.nextLine();
         while (nombreMago.trim().isEmpty()) {
             System.out.println("Vuelve a introducir tu nombre, por favor: ");

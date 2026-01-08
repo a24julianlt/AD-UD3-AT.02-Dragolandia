@@ -71,8 +71,8 @@ public class Bosque {
         this.monstruos = monstruos;
     }
     
-    public void cambiarJefe(Monstruo monstruoNuevo) {
-        this.monstruoJefe = monstruoNuevo;
+    public void addMonstruo(Monstruo monstruo) {
+        this.monstruos.add(monstruo);
     }
 
 

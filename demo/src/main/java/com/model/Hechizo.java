@@ -19,6 +19,10 @@ public abstract class Hechizo {
 
     }
 
+    public void efecto(Monstruo monstruo) {
+        
+    }
+
     public void efecto(List<Monstruo> monstruos) {
 
     }

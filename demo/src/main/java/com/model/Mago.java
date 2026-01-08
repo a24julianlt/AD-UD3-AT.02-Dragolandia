@@ -69,10 +69,18 @@ public class Mago {
         conjuros.add(hechizo);
     }
 
-    public void lanzarhechizo(Monstruo monstruo) {
+    public void lanzarHechizo(Monstruo monstruo) {
         int nuevaVida = monstruo.getVida() - this.getNivelMagia();
 
         monstruo.setVida(nuevaVida);
+    }
+
+    public void lanzarHechizo(Monstruo monstruo, Hechizo conjuro) {
+        if (conjuros.contains(conjuro)) {
+            conjuro.efecto(monstruo);
+        } else {
+            setVida(vida-1);
+        }
     }
 
     @Override
