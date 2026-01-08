@@ -4,6 +4,7 @@ import com.model.Mago;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
+import jakarta.persistence.Query;
 
 import java.util.List;
 
@@ -111,6 +112,26 @@ public class ControladorMago {
 
         } catch (Exception e) {
             System.out.println("ERROR AL LISTAR LOS MAGOS: " + e.getMessage());
+        } finally {
+            if (em.isOpen())
+                em.close();
+        }
+    }
+
+    public void buscarMago(int id) {
+        EntityManager em = database.getEntityManager();
+
+        try {
+            EntityTransaction tx = em.getTransaction();
+
+            tx.begin();
+            Query query = em.createQuery("select * from Mago where id=:id");
+            query.setParameter("id", id);
+            query.getResultList();
+            tx.commit();
+
+        } catch (Exception e) {
+            System.out.println("ERROR AL BUSCAR EL MAGO: " + e.getMessage());
         } finally {
             if (em.isOpen())
                 em.close();

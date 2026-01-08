@@ -7,6 +7,7 @@ import com.model.Monstruo;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
+import jakarta.persistence.Query;
 
 public class ControladorBosque {
     private final Bosque bosque;
@@ -111,6 +112,26 @@ public class ControladorBosque {
             System.out.println("ERROR AL LISTAR LOS BOSQUES: " + e.getMessage());
         } finally {
             if (em.isOpen()) em.close();
+        }
+    }
+
+    public void buscarMonstruo(int id) {
+        EntityManager em = database.getEntityManager();
+
+        try {
+            EntityTransaction tx = em.getTransaction();
+
+            tx.begin();
+            Query query = em.createQuery("select * from Bosque where id=:id");
+            query.setParameter("id", id);
+            query.getResultList();
+            tx.commit();
+
+        } catch (Exception e) {
+            System.out.println("ERROR AL BUSCAR EL BOSQUE: " + e.getMessage());
+        } finally {
+            if (em.isOpen())
+                em.close();
         }
     }
 }

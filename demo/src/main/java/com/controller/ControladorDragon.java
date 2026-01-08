@@ -5,6 +5,7 @@ import com.model.Dragon;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
+import jakarta.persistence.Query;
 
 public class ControladorDragon {
     private final Dragon dragon;
@@ -93,6 +94,26 @@ public class ControladorDragon {
             System.out.println("ERROR AL LISTAR LOS DRAGONES: " + e.getMessage());
         } finally {
             if (em.isOpen()) em.close();
+        }
+    }
+
+    public void buscarMonstruo(int id) {
+        EntityManager em = database.getEntityManager();
+
+        try {
+            EntityTransaction tx = em.getTransaction();
+
+            tx.begin();
+            Query query = em.createQuery("select * from Dragon where id=:id");
+            query.setParameter("id", id);
+            query.getResultList();
+            tx.commit();
+
+        } catch (Exception e) {
+            System.out.println("ERROR AL BUSCAR EL DRAGON: " + e.getMessage());
+        } finally {
+            if (em.isOpen())
+                em.close();
         }
     }
 }

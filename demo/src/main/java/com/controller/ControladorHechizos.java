@@ -11,6 +11,7 @@ import com.model.Rayo;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
+import jakarta.persistence.Query;
 
 public class ControladorHechizos {
     private final List<Hechizo> hechizos;
@@ -124,6 +125,26 @@ public class ControladorHechizos {
 
         } catch (Exception e) {
             System.out.println("ERROR AL LISTAR LOS HECHIZOS: " + e.getMessage());
+        } finally {
+            if (em.isOpen())
+                em.close();
+        }
+    }
+
+    public void buscarHechizo(int id) {
+        EntityManager em = database.getEntityManager();
+
+        try {
+            EntityTransaction tx = em.getTransaction();
+
+            tx.begin();
+            Query query = em.createQuery("select * from Hechizo where id=:id");
+            query.setParameter("id", id);
+            query.getResultList();
+            tx.commit();
+
+        } catch (Exception e) {
+            System.out.println("ERROR AL BUSCAR EL HECHIZO: " + e.getMessage());
         } finally {
             if (em.isOpen())
                 em.close();
