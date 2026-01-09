@@ -1,10 +1,8 @@
 package com.controller;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import com.model.Monstruo;
-import com.model.TipoMonstruo;
+import com.model.*;
 
 public class ControladorPrincipal {
     private final ControladorMago contrMago;
@@ -19,21 +17,6 @@ public class ControladorPrincipal {
         this.contrMonstruo = new ControladorMonstruo();
         this.contrDragon = new ControladorDragon();
         this.contrHechizos = new ControladorHechizos();
-    }
-
-    public void crearPartida(String nombreMago, List<Integer> hechizos, String nombreMons, List<String> monstruos,
-            String nombreBosque, String nombreDragon) {
-        contrMago.crearMago(nombreMago, hechizos);
-        contrMonstruo.crearMonstruo(nombreMons);
-        List<Monstruo> monstruosBosque = new ArrayList<>();
-        for (String m : monstruos) {
-            monstruosBosque.add(contrMonstruo.newMonstruo(m));
-        }
-        contrBosque.crearBosque(nombreBosque, contrMonstruo.getMonstruo(), monstruosBosque);
-        contrDragon.crearDragon(nombreDragon, contrBosque.getBosque());
-        // Los hechizos son siempre los mismo, por eso ya se crean con el inicializador
-        // entonces los guardamos automáticamente
-        contrHechizos.gardarHechizos();
     }
 
     public int getVidaMago() {
@@ -119,27 +102,56 @@ public class ControladorPrincipal {
         return true;
     }
 
+    public void setMontruoJefe(Monstruo mons) {
+        contrBosque.setMonstruoJefe(mons);
+    }
+
+    public Monstruo crearMonstruo(String nombreMonstruo) {
+        return contrMonstruo.newMonstruo(nombreMonstruo);
+    }
+
+    public Mago crearMago(String nombreMago, List<Integer> conjuros) {
+        return contrMago.newMago(nombreMago, conjuros);
+    }
+
+    public Dragon crearDragon(String nombreDragon) {
+        return contrDragon.crearDragon(nombreDragon, contrBosque.getBosque());
+    }
+
+    public void añadirABosque(Monstruo mons) {
+        contrBosque.añadirABosque(mons);
+
+        contrBosque.actualizarBosque(contrBosque.getBosque());
+    }
+
     /*
      * BASE DE DATOS
      */
-    public void gardarMago() {
-        contrMago.gardarMago(contrMago.getMago());
+    public void gardarMago(String nombreMago, List<Integer> conjuros) {
+        contrMago.gardarMago(contrMago.newMago(nombreMago, conjuros));
     }
 
-    public void gardarMonstruo() {
-        contrMonstruo.gardarMonstruo(contrMonstruo.getMonstruo());
+    public void gardarMonstruo(String nombreMonstruo) {
+        contrMonstruo.gardarMonstruo(contrMonstruo.newMonstruo(nombreMonstruo));
     }
 
     public void gardarListaMonstruo(List<Monstruo> monstruos) {
-        for (Monstruo m : monstruos) contrMonstruo.gardarMonstruo(m);
+        for (Monstruo m : monstruos)
+            contrMonstruo.gardarMonstruo(m);
     }
 
-    public void gardarBosque() {
+    public void gardarBosque(String nombreBosque) {
+        contrBosque.crearBosque(nombreBosque, null, getListMonstruos());
+
         contrBosque.gardarBosque(contrBosque.getBosque());
     }
 
     public void gardarDragon() {
         contrDragon.gardarDragon(contrDragon.getDragon());
+    }
+
+    public void gardarHechizos() {
+        contrHechizos.gardarHechizos();
     }
 
     public void eliminarMago() {
@@ -151,7 +163,8 @@ public class ControladorPrincipal {
     }
 
     public void eliminarListaMonstruo(List<Monstruo> monstruos) {
-        for (Monstruo m : monstruos) contrMonstruo.eliminarMonstruo(m);
+        for (Monstruo m : monstruos)
+            contrMonstruo.eliminarMonstruo(m);
     }
 
     public void eliminarBosque() {

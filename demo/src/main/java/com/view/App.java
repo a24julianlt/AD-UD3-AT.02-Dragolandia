@@ -6,24 +6,92 @@ import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 import com.controller.*;
+import com.model.*;
 
 public class App {
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
 
+        /**
+         * Inicializamos el controlador principal para guardar los datos a medida que
+         * creamos los personajes
+         * además creamos los hechizos, ya que son siempre los mismos
+         */
+        ControladorPrincipal controller = new ControladorPrincipal();
+        controller.gardarHechizos();
+
         System.out.println("BIENVENIDO AL JUEGO");
         System.out.println();
-        System.out.println("¡¡Vamos a crear los magos y los monstruos del bosque!!");
+        System.out.println("Primero vamos a crear el bosque en el que van a pelear");
+        System.out.println();
+        System.out.println("Introduce el nombre del bosque:");
+        String nombreBosque = sc.nextLine();
+        while (nombreBosque.trim().isEmpty()) {
+            System.out.println("Vuelve a introducir el nombre del bosque, por favor: ");
+            nombreBosque = sc.nextLine();
+        }
+        System.out.println();
+        System.out.println("La pelea será en el bosque " + nombreBosque);
+        System.out.println();
+
+        controller.gardarBosque(nombreBosque);
+
+        System.out.println("Ahora vamos a crear los monstruos, ");
+        System.out.println("¿Cuantos monstruos quieres crear?: min 3");
+        String n = sc.nextLine();
+        int nMons;
+        try {
+            nMons = (int) Integer.parseInt(n);
+            if (nMons < 3) {
+                System.out.println("Como elegiste un número menor que 3, vamos a crear 3 monstruos");
+                nMons = 3;
+            }
+        } catch (Exception e) {
+            nMons = 0;
+            if (nMons < 3) {
+                System.out.println("Como no elegiste un número válido, vamos a crear 3 monstruos");
+                nMons = 3;
+            }
+        }
+
+        List<Monstruo> monstruos = new ArrayList<Monstruo>();
+        for (int i = 0; i < nMons; i++) {
+            System.out.println("Introduce el nombre del monstruo -" + i);
+            String nombreMonstruo = sc.nextLine();
+            while (nombreMonstruo.trim().isEmpty()) {
+                System.out.println("Vuelve a introducir el nombre del monstruo, por favor: ");
+                nombreMonstruo = sc.nextLine();
+            }
+            System.out.println("Bienvenido, " + nombreMonstruo);
+            System.out.println();
+
+            monstruos.add(controller.crearMonstruo(nombreMonstruo));
+        }
+
+        System.out.println();
+        System.out.println("Ahora vamos a crear los magos");
         System.out.println();
         System.out.println("¿Cuantos magos quieres crear?: min 2");
-        int nMagos = sc.nextInt();
-        sc.nextLine();
+        n = sc.nextLine();
+        int nMagos;
 
-        if (nMagos < 2) nMagos = 2;
+        try {
+            nMagos = (int) Integer.parseInt(n);
+            if (nMagos < 2) {
+                System.out.println("Como elegiste un número menor que 2, vamos a crear 2 magos");
+                nMagos = 2;
+            }
+        } catch (Exception e) {
+            nMagos = 0;
+            if (nMagos < 2) {
+                System.out.println("Como no elegiste un número válido, vamos a crear 2 magos");
+                nMagos = 2;
+            }
+        }
 
-        Map<String, List<Integer>> MagosYHechizos = new HashMap<>();
+        Map<String, List<Integer>> magosYHechizos = new HashMap<>();
 
-        List<String> magos = new ArrayList<String>();
+        List<Mago> magos = new ArrayList<Mago>();
         for (int i = 0; i < nMagos; i++) {
             System.out.println("Introduce el nombre del mago -" + i);
             String nombreMago = sc.nextLine();
@@ -33,65 +101,46 @@ public class App {
             }
             System.out.println("Bienvenido, " + nombreMago);
             System.out.println();
-            magos.add(nombreMago);
 
-            elegirHechizos(sc, nombreMago);
+            List<Integer> conjuros = elegirHechizos(sc, nombreMago);
+
+            magos.add(controller.crearMago(nombreMago, conjuros));
+            magosYHechizos.put(nombreMago, conjuros);
         }
 
         System.out.println();
 
-        
-
-        /*
-         * 
-         * 
-         * TERMINAR SELECCIONAR HECHIZO
-         * 
-         * 
-         */
-
-        System.out.println();
-
-        System.out.println("Ahora vas a nombrar a tu enemigo, un monstruo");
-        System.out.println("Introduce el nombre del monstruo: ");
-        String nombreMonstruo = sc.nextLine();
-        while (nombreMonstruo.trim().isEmpty()) {
-            System.out.println("Vuelve a introducir el nombre del monstruo, por favor: ");
-            nombreMonstruo = sc.nextLine();
-        }
-
-        System.out.println();
-
-        System.out.println("Muy bien, ahora introduce el nombre del bosque que quieres conquistar:");
-        String nombreBosque = sc.nextLine();
-        while (nombreBosque.trim().isEmpty()) {
-            System.out.println("Vuelve a introducir el nombre del bosque, por favor: ");
-            nombreBosque = sc.nextLine();
-        }
-
-        System.out.println();
-
-        System.out.println("Muy bien, ahora introduce el nombre del dragon:");
+        System.out.println("Vamos a crear el dragón");
+        System.out.println("Introduce el nombre del Dragón");
         String nombreDragon = sc.nextLine();
         while (nombreDragon.trim().isEmpty()) {
-            System.out.println("Vuelve a introducir el nombre del dragon, por favor: ");
+            System.out.println("Vuelve a introducir tu nombre, por favor: ");
             nombreDragon = sc.nextLine();
         }
+        controller.crearDragon(nombreDragon);
+        System.out.println("Dragón " + nombreDragon + " creado");
+        System.out.println();
 
-        List<String> monstruos = new ArrayList<>();
-        monstruos.add("Monstruo " + nombreBosque);
+        System.out.println("Vale, ahora asignamos al bosque los Monstruos");
 
-        ControladorPrincipal controller = new ControladorPrincipal();
-        //controller.crearPartida(nombreMago, hechizos, nombreMonstruo, monstruos, nombreBosque, nombreDragon);
-
-        controller.gardarMago();
-        controller.gardarMonstruo();
-        controller.gardarBosque();
-        controller.gardarDragon();
+        for (int i = 0; i < monstruos.size(); i++) {
+            if (i == 0) {
+                controller.setMontruoJefe(monstruos.get(i));
+                System.out.println("El primer monstruo lo añadimos como jefe del bosque");
+            } else {
+                controller.añadirABosque(monstruos.get(i));
+            }
+        }
 
         System.out.println();
-        System.out.println("Te enfrentaras al monstruo " + nombreMonstruo + " de tipo " + controller.getTipoMons()
-                + " por el control del bosque " + nombreBosque);
+
+
+
+
+
+
+    
+
 
         System.out.println();
         System.out.println("Perfecto, vamos a empezar a pelear");
@@ -156,7 +205,8 @@ public class App {
         } else {
             System.out.println("¡Que pena!");
             System.out.println("Has perdido");
-            System.out.println("El monstruo " + nombreMonstruo + " sigue siendo el dueño del bosque");
+            // System.out.println("El monstruo " + nombreMonstruo + " sigue siendo el dueño
+            // del bosque");
         }
 
         System.out.println();
@@ -176,10 +226,12 @@ public class App {
 
     /**
      * Función para elegir los hechizos de cada mago
+     * 
      * @param mago nombre del mago
-     * @return map de los hechizos de cada mago, clave nombre del mago y list de hechizos
+     * @return map de los hechizos de cada mago, clave nombre del mago y list de
+     *         hechizos
      */
-    public Map<String, List<Integer>> elegirHechizos(Scanner sc, String mago) {
+    public static List<Integer> elegirHechizos(Scanner sc, String mago) {
         List<Integer> hechizos = new ArrayList<Integer>();
         Map<Integer, String> posibles = new HashMap<>(Map.of(
                 1, "Bola de fuego",
@@ -188,7 +240,7 @@ public class App {
                 4, "Meteorito"));
         String opc = "";
 
-        while (!opc.equals("0")) {
+        while (hechizos.size() < 2 || !opc.equals("0")) {
             System.out.println("Elige que hechizos quieres.");
             System.out.println("Opciones: ");
             int i = 1;
@@ -198,8 +250,8 @@ public class App {
                 }
                 i++;
             }
-            System.out.println("0. Salir");
-            System.out.println("Puedes tener un máximo de 4 hechizos");
+            System.out.println("0. Salir | Solo puedes salir si tienes mínimo 2 hechizos");
+            System.out.println("Puedes tener un máximo de 4 hechizos: ");
             opc = sc.nextLine();
             while (opc.trim().isEmpty()) {
                 System.out.println("No has introducido nada, vuelve a introducir el codigo del hechizo, por favor: ");
@@ -234,10 +286,6 @@ public class App {
             System.out.println(h);
         }
 
-        Map<String, List<Integer>> magosYHechizos = new HashMap<>();
-
-        magosYHechizos.put("", hechizos);
-
-        return magosYHechizos;
+        return hechizos;
     }
 }

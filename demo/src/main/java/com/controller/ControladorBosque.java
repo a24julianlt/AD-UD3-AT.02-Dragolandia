@@ -44,6 +44,16 @@ public class ControladorBosque {
         return bosque.getMonstruosBosque();
     }
 
+    public void setMonstruoJefe(Monstruo mons) {
+        bosque.setMonstruoJefe(mons);
+
+        actualizarBosque(bosque);
+    }
+
+    public void añadirABosque(Monstruo mons) {
+        bosque.addMonstruo(mons);
+    }
+
     /*
      * BASE DE DATOS
      */
@@ -81,7 +91,7 @@ public class ControladorBosque {
         }
     }
 
-    public void actualzarBosque(Bosque bosque) {
+    public void actualizarBosque(Bosque bosque) {
         EntityManager em = database.getEntityManager();
         try {
             EntityTransaction tx = em.getTransaction();
@@ -91,7 +101,7 @@ public class ControladorBosque {
             tx.commit();
 
         } catch (Exception e) {
-            System.out.println("ERROR AL ACTULIZAR UN BOSQUE: " + e.getMessage());
+            System.out.println("ERROR AL ACTUALIZAR UN BOSQUE: " + e.getMessage());
         } finally {
             if (em.isOpen())
                 em.close();

@@ -22,7 +22,16 @@ public class ControladorMago {
         mago.setNombre(nombre);
         mago.setVida(20);
         mago.setNivelMagia(5);
-        setConjuros(hechizos);
+        setConjuros(mago, hechizos);
+    }
+
+    public Mago newMago(String nombre, List<Integer> conjuros) {
+        Mago newMago = new Mago(nombre);
+        setConjuros(newMago, conjuros);
+
+        gardarMago(newMago);
+
+        return newMago;
     }
 
     public Mago getMago() {
@@ -37,7 +46,7 @@ public class ControladorMago {
         return mago.getVida();
     }
 
-    public void setConjuros(List<Integer> hechizos) {
+    public void setConjuros(Mago mago, List<Integer> hechizos) {
         for (int h : hechizos) {
             mago.añadirConjuro(contrHechizos.getHechizo(h));
         }

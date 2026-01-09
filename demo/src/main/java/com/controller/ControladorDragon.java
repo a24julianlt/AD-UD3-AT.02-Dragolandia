@@ -15,11 +15,15 @@ public class ControladorDragon {
         this.dragon = new Dragon();
     }
 
-    public void crearDragon(String nombre, Bosque bosque) {
+    public Dragon crearDragon(String nombre, Bosque bosque) {
         dragon.setNombre(nombre);
         dragon.setIntensidadFuego((int) Math.random() * 20);
         dragon.setResistencia(30);
         dragon.setBosque(bosque);
+
+        gardarDragon(dragon);
+
+        return dragon;
     }
 
     public Dragon getDragon() {

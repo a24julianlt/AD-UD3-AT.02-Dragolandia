@@ -25,6 +25,8 @@ public class ControladorMonstruo {
     public Monstruo newMonstruo(String nombre) {
         Monstruo newMons = new Monstruo(nombre);
 
+        gardarMonstruo(newMons);
+
         return newMons;
     }
 

@@ -1,5 +1,6 @@
 package com.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import jakarta.persistence.*;
@@ -19,7 +20,7 @@ public class Bosque {
     private Monstruo monstruoJefe;
 
     @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    private List<Monstruo> monstruos;
+    private List<Monstruo> monstruos = new ArrayList<>();
 
     public Bosque() {
     }
