@@ -11,8 +11,10 @@ import com.model.Rayo;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
-import jakarta.persistence.Query;
 
+/**
+ * Controlador para gestionar las operaciones CRUD de los Hechizos.
+ */
 public class ControladorHechizos {
     private final List<Hechizo> hechizos;
     private final HibernateSingleton database = HibernateSingleton.getInstance();
@@ -25,20 +27,39 @@ public class ControladorHechizos {
                 new Meteorito());
     }
 
+    /**
+     * Obtiene el nombre de un hechizo por su índice.
+     * @param indice El índice del hechizo (0-3)
+     * @return El nombre del hechizo
+     */
     public String getNombreHechizo(int indice) {
         return hechizos.get(indice).getNombre();
     }
 
+    /**
+     * Lanza un hechizo sobre una lista de monstruos.
+     * @param indice El índice del hechizo a lanzar
+     * @param monstruos Lista de monstruos objetivo
+     */
     public void lanzar(int indice, List<Monstruo> monstruos) {
         hechizos.get(indice).efecto(monstruos);
     }
 
+    /**
+     * Obtiene un hechizo por su índice.
+     * @param i El índice del hechizo
+     * @return El hechizo
+     */
     public Hechizo getHechizo(int i) {
         return hechizos.get(i);
     }
 
     /*
      * BASE DE DATOS
+     */
+    
+    /**
+     * Guarda los 4 hechizos base en la base de datos si no existen.
      */
     public void gardarHechizos() {
         EntityManager em = database.getEntityManager();
@@ -67,6 +88,7 @@ public class ControladorHechizos {
             }
 
             tx.commit();
+            System.out.println("Hechizos guardados correctamente");
 
         } catch (Exception e) {
             if (em.getTransaction().isActive()) {
@@ -79,19 +101,28 @@ public class ControladorHechizos {
         }
     }
 
+    /**
+     * Elimina un hechizo de la base de datos.
+     * @param hechizo El hechizo a eliminar
+     */
     public void eliminarHechizo(Hechizo hechizo) {
         EntityManager em = database.getEntityManager();
 
         try {
             EntityTransaction tx = em.getTransaction();
-
             tx.begin();
-
-            em.remove(hechizo);
-
+            
+            // Mergear para evitar detached entity
+            Hechizo hechizoGestionado = em.merge(hechizo);
+            em.remove(hechizoGestionado);
+            
             tx.commit();
+            System.out.println("Hechizo eliminado correctamente");
 
         } catch (Exception e) {
+            if (em.getTransaction().isActive()) {
+                em.getTransaction().rollback();
+            }
             System.out.println("ERROR AL ELIMINAR EL HECHIZO: " + e.getMessage());
         } finally {
             if (em.isOpen())
@@ -99,19 +130,24 @@ public class ControladorHechizos {
         }
     }
 
+    /**
+     * Actualiza un hechizo en la base de datos.
+     * @param hechizo El hechizo a actualizar
+     */
     public void actualizarHechizo(Hechizo hechizo) {
         EntityManager em = database.getEntityManager();
 
         try {
             EntityTransaction tx = em.getTransaction();
-
             tx.begin();
-
             em.merge(hechizo);
-
             tx.commit();
+            System.out.println("Hechizo actualizado correctamente");
 
         } catch (Exception e) {
+            if (em.getTransaction().isActive()) {
+                em.getTransaction().rollback();
+            }
             System.out.println("ERROR AL ACTUALIZAR EL HECHIZO: " + e.getMessage());
         } finally {
             if (em.isOpen())
@@ -119,43 +155,58 @@ public class ControladorHechizos {
         }
     }
 
-    public void listarHechizos(Hechizo hechizo) {
+    /**
+     * Lista todos los hechizos de la base de datos.
+     * @return Lista de hechizos
+     */
+    public List<Hechizo> listarHechizos() {
         EntityManager em = database.getEntityManager();
+        List<Hechizo> listaHechizos = null;
 
         try {
             EntityTransaction tx = em.getTransaction();
-
             tx.begin();
-
-            em.createQuery("select * from Hechizos", Hechizo.class).getResultList();
-
+            listaHechizos = em.createQuery("SELECT h FROM Hechizo h", Hechizo.class).getResultList();
             tx.commit();
 
         } catch (Exception e) {
+            if (em.getTransaction().isActive()) {
+                em.getTransaction().rollback();
+            }
             System.out.println("ERROR AL LISTAR LOS HECHIZOS: " + e.getMessage());
         } finally {
             if (em.isOpen())
                 em.close();
         }
+        
+        return listaHechizos;
     }
 
-    public void buscarHechizo(int id) {
+    /**
+     * Busca un hechizo por su ID.
+     * @param id El ID del hechizo
+     * @return El hechizo encontrado o null
+     */
+    public Hechizo buscarHechizo(int id) {
         EntityManager em = database.getEntityManager();
+        Hechizo hechizo = null;
 
         try {
             EntityTransaction tx = em.getTransaction();
-
             tx.begin();
-            Query query = em.createQuery("select * from Hechizo where id=:id");
-            query.setParameter("id", id);
-            query.getResultList();
+            hechizo = em.find(Hechizo.class, id);
             tx.commit();
 
         } catch (Exception e) {
+            if (em.getTransaction().isActive()) {
+                em.getTransaction().rollback();
+            }
             System.out.println("ERROR AL BUSCAR EL HECHIZO: " + e.getMessage());
         } finally {
             if (em.isOpen())
                 em.close();
         }
+        
+        return hechizo;
     }
 }

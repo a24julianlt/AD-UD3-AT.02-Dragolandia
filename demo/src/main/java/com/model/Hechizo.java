@@ -5,6 +5,10 @@ import java.util.List;
 
 import jakarta.persistence.*;
 
+/**
+ * Clase abstracta que representa un hechizo en el juego.
+ * Los hechizos pueden afectar a uno o varios monstruos.
+ */
 @Entity
 @Table(name = "hechizos")
 @Inheritance(strategy = InheritanceType.JOINED)
@@ -19,14 +23,25 @@ public abstract class Hechizo {
     @OneToMany(mappedBy = "hechizo", cascade = CascadeType.ALL)
     private List<MagoHechizo> magoHechizos = new ArrayList<>();
 
+    /**
+     * Constructor vacío requerido por JPA.
+     */
     public Hechizo() {
 
     }
 
+    /**
+     * Aplica el efecto del hechizo a un monstruo individual.
+     * @param monstruo El monstruo objetivo
+     */
     public void efecto(Monstruo monstruo) {
-        
+
     }
 
+    /**
+     * Aplica el efecto del hechizo a múltiples monstruos.
+     * @param monstruos Lista de monstruos objetivo
+     */
     public void efecto(List<Monstruo> monstruos) {
 
     }

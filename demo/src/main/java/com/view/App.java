@@ -5,9 +5,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
+import java.util.stream.Collectors;
+
 import com.controller.*;
 import com.model.*;
 
+/**
+ * Clase principal del juego Dragolandia.
+ * Gestiona el flujo del juego y la interacción con el usuario.
+ */
 public class App {
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
@@ -142,94 +148,249 @@ public class App {
         System.out.println();
 
         try {
-            Thread.sleep(3000); // 3 segundos
+            Thread.sleep(2000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
 
-        System.out.println("Empiezas atacando: ");
-        while (controller.finPartida()) {
-            System.out.println("Lanzas un hechizo de " + controller.getNivelMagia() + " de poder mágico");
-            System.out.println();
+        // OBTENER REFERENCIAS A TRAVÉS DE CONTROLADORES
+        Bosque bosque = controller.obtenerBosque();
+        Dragon dragon = controller.obtenerDragon();
+        List<Hechizo> todosHechizos = controller.getTodosLosHechizos();
+
+        int ronda = 1;
+
+        // Mientras haya magos y monstruos vivos
+        while (magos.stream().anyMatch(m -> m.getVida() > 0) &&
+                controller.getListMonstruos().stream().anyMatch(m -> m.getVida() > 0)) {
+
+            System.out.println("\n========== RONDA " + ronda + " ==========");
+
+            // a) Cada mago lanza un conjuro aleatorio
+            System.out.println("\n--- TURNO DE MAGOS ---");
+            for (Mago mago : magos) {
+                if (mago.getVida() > 0) {
+                    // Seleccionar hechizo aleatorio de TODOS los disponibles
+                    Hechizo hechizoAleatorio = todosHechizos.get((int) (Math.random() * todosHechizos.size()));
+
+                    // Verificar si el mago conoce este hechizo
+                    List<Hechizo> conjurosMago = mago.getConjuros();
+                    boolean conoceHechizo = conjurosMago.stream()
+                            .anyMatch(h -> h.getNombre().equals(hechizoAleatorio.getNombre()));
+
+                    if (conoceHechizo) {
+                        System.out.println(mago.getNombre() + " lanza " + hechizoAleatorio.getNombre());
+
+                        // Usar método del controlador para aplicar hechizo
+                        controller.usarHechizo(hechizoAleatorio.getNombre(), controller.getListMonstruos());
+
+                        // Avisar y retirar caídos inmediatamente tras el hechizo
+                        List<Monstruo> muertosTrasHechizo = new ArrayList<>();
+                        for (Monstruo obj : controller.getListMonstruos()) {
+                            if (obj.getVida() <= 0) {
+                                System.out.println("Muere " + obj.getNombre());
+                                muertosTrasHechizo.add(obj);
+                            }
+                        }
+                        controller.getListMonstruos().removeAll(muertosTrasHechizo);
+
+                        if (bosque.getMonstruoJefe() != null && bosque.getMonstruoJefe().getVida() <= 0) {
+                            System.out.println("Muere el jefe " + bosque.getMonstruoJefe().getNombre());
+                            List<Monstruo> vivos = controller.getListMonstruos().stream()
+                                    .filter(m -> m.getVida() > 0)
+                                    .collect(Collectors.toList());
+                            if (!vivos.isEmpty()) {
+                                Monstruo nuevoJefe = vivos.get(0);
+                                controller.setMontruoJefe(nuevoJefe);
+                                vivos.remove(0);
+                                controller.setMonstruosBosque(vivos);
+                                System.out.println(nuevoJefe.getNombre() + " pasa a ser el nuevo jefe del bosque");
+                            } else {
+                                controller.setMontruoJefe(null);
+                                System.out.println("No quedan monstruos para jefe");
+                            }
+                        }
+                    } else {
+                        System.out.println(mago.getNombre() + " intenta " + hechizoAleatorio.getNombre() +
+                                " pero no lo conoce. ¡Pierde 1 vida!");
+                        mago.setVida(mago.getVida() - 1);
+                    }
+                }
+            }
+
+            // b) Cada monstruo ataca a un mago
+            System.out.println("\n--- TURNO DE MONSTRUOS ---");
+            List<Monstruo> monstruosAtaque = new ArrayList<>();
+
+            // Añadir monstruo jefe (solo una vez)
+            Monstruo jefe = bosque.getMonstruoJefe();
+            if (jefe != null && jefe.getVida() > 0) {
+                monstruosAtaque.add(jefe);
+            }
+
+            // Añadir resto de monstruos vivos, evitando duplicar al jefe
+            monstruosAtaque.addAll(controller.getListMonstruos().stream()
+                    .filter(m -> m.getVida() > 0 && (jefe == null || m.getId() != jefe.getId()))
+                    .collect(Collectors.toList()));
+
+            for (Monstruo monstruo : monstruosAtaque) {
+                List<Mago> magosVivos = magos.stream()
+                        .filter(m -> m.getVida() > 0)
+                        .collect(Collectors.toList());
+
+                if (!magosVivos.isEmpty()) {
+                    Mago objetivo = magosVivos.get((int) (Math.random() * magosVivos.size()));
+                    System.out.println(monstruo.getNombre() + " ataca a " + objetivo.getNombre());
+                    monstruo.atacar(objetivo);
+
+                    if (objetivo.getVida() <= 0) {
+                        System.out.println("Muere " + objetivo.getNombre());
+                        magos.removeIf(m -> m.getNombre().equals(objetivo.getNombre()));
+                    }
+                }
+            }
+
+            // c) El dragón ataca al monstruo jefe
+            System.out.println("\n--- TURNO DEL DRAGÓN ---");
+            if (dragon.getVida() > 0 && bosque.getMonstruoJefe() != null &&
+                    bosque.getMonstruoJefe().getVida() > 0) {
+                dragon.atacar(bosque.getMonstruoJefe());
+
+                if (bosque.getMonstruoJefe().getVida() <= 0) {
+                    System.out.println("Muere el jefe " + bosque.getMonstruoJefe().getNombre());
+                    List<Monstruo> vivos = controller.getListMonstruos().stream()
+                            .filter(m -> m.getVida() > 0)
+                            .collect(Collectors.toList());
+                    if (!vivos.isEmpty()) {
+                        Monstruo nuevoJefe = vivos.get(0);
+                        controller.setMontruoJefe(nuevoJefe);
+                        vivos.remove(0);
+                        controller.setMonstruosBosque(vivos);
+                        System.out.println(nuevoJefe.getNombre() + " pasa a ser el nuevo jefe del bosque");
+                    } else {
+                        controller.setMontruoJefe(null);
+                        System.out.println("No quedan monstruos para jefe");
+                    }
+                }
+            }
+
+            // 1. Eliminar muertos y reasignar jefe si es necesario
+            System.out.println("\n--- LIMPIEZA ---");
+
+            // Eliminar magos muertos
+            List<Mago> magosMuertos = magos.stream()
+                    .filter(m -> m.getVida() <= 0)
+                    .collect(Collectors.toList());
+
+            for (Mago m : magosMuertos) {
+                System.out.println(m.getNombre() + " ha muerto");
+            }
+            magos.removeAll(magosMuertos);
+
+            // Eliminar monstruos muertos
+            List<Monstruo> monstruosMuertos = controller.getListMonstruos().stream()
+                    .filter(m -> m.getVida() <= 0)
+                    .collect(Collectors.toList());
+
+            for (Monstruo m : monstruosMuertos) {
+                System.out.println(m.getNombre() + " ha muerto");
+            }
+            controller.getListMonstruos().removeAll(monstruosMuertos);
+
+            // Si el jefe muere, asignar nuevo jefe
+            if (bosque.getMonstruoJefe() != null && bosque.getMonstruoJefe().getVida() <= 0) {
+                System.out.println("El jefe " + bosque.getMonstruoJefe().getNombre() + " ha muerto");
+
+                List<Monstruo> monstruosVivos = controller.getListMonstruos().stream()
+                        .filter(m -> m.getVida() > 0)
+                        .collect(Collectors.toList());
+
+                if (!monstruosVivos.isEmpty()) {
+                    Monstruo nuevoJefe = monstruosVivos.get(0);
+                    controller.setMontruoJefe(nuevoJefe);
+                    monstruosVivos.remove(0);
+                    controller.setMonstruosBosque(monstruosVivos);
+                    System.out.println(nuevoJefe.getNombre() + " es el nuevo jefe del bosque");
+                } else {
+                    controller.setMontruoJefe(null);
+                    System.out.println("No quedan monstruos para ser jefe");
+                }
+            }
+
+            // 2. Mostrar estado después de cada ronda
+            System.out.println("\n========== ESTADO DEL JUEGO ==========");
+
+            System.out.println("\n--- MAGOS ---");
+            for (Mago m : magos) {
+                String estado = m.getVida() > 0 ? "VIVO" : "MUERTO";
+                System.out.println(m.getNombre() + " - Vida: " + m.getVida() + " - " + estado);
+            }
+
+            System.out.println("\n--- BOSQUE: " + bosque.getNombre() + " ---");
+            if (bosque.getMonstruoJefe() != null) {
+                String estado = bosque.getMonstruoJefe().getVida() > 0 ? "VIVO" : "MUERTO";
+                System.out.println("👑 JEFE: " + bosque.getMonstruoJefe().getNombre() +
+                        " (" + bosque.getMonstruoJefe().getTipo() + ") - Vida: " +
+                        bosque.getMonstruoJefe().getVida() + " - " + estado);
+            }
+
+            System.out.println("\nMonstruos en el bosque: " + controller.getListMonstruos().size());
+            for (Monstruo m : controller.getListMonstruos()) {
+                String estado = m.getVida() > 0 ? "VIVO" : "MUERTO";
+                System.out.println("  🧟 " + m.getNombre() + " (" + m.getTipo() + ") - Vida: " +
+                        m.getVida() + " - " + estado);
+            }
+
+            System.out.println("\n--- DRAGÓN ---");
+                String estadoDragon = dragon.getVida() > 0 ? "VIVO" : "MUERTO";
+                System.out.println(dragon.getNombre() + " - Resistencia: " +
+                    dragon.getResistencia() + " - " + estadoDragon);
+
+            System.out.println("=====================================");
 
             try {
-                Thread.sleep(3000); // 3 segundos
+                Thread.sleep(2000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            controller.atacaMago();
-            System.out.println("El monstruo queda con " + controller.getVidaMons() + " puntos de vida");
-            System.out.println();
 
-            try {
-                Thread.sleep(3000); // 3 segundos
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-
-            if (!controller.finPartida()) {
-                break;
-            }
-
-            System.out.println();
-            System.out.println("Ahora ataca el monstruo,");
-            System.out.println();
-
-            try {
-                Thread.sleep(3000); // 3 segundos
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-
-            controller.atacaMons();
-            System.out.println("Te quedas con " + controller.getVidaMago() + " puntos de vida");
-
-            System.out.println();
-
-            try {
-                Thread.sleep(3000); // 3 segundos
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+            ronda++;
         }
 
-        if (controller.ganaMago()) {
-            System.out.println("¡¡FELICIDADES!!");
-            System.out.println("¡¡HAS GANADO!!");
-            System.out.println("Ahora eres el dueño del bosque " + nombreBosque);
+        // 3. Fin de partida
+        System.out.println("\n========== FIN DEL JUEGO ==========");
+        if (magos.stream().anyMatch(m -> m.getVida() > 0)) {
+            System.out.println("🎉 ¡¡FELICIDADES!!");
+            System.out.println("¡¡LOS MAGOS HAN GANADO!!");
+            System.out.println("Ahora son los dueños del bosque " + bosque.getNombre());
         } else {
             System.out.println("¡Que pena!");
-            System.out.println("Has perdido");
-            // System.out.println("El monstruo " + nombreMonstruo + " sigue siendo el dueño
-            // del bosque");
+            System.out.println("¡¡LOS MONSTRUOS HAN GANADO!!");
         }
+        System.out.println("=====================================");
 
         System.out.println();
 
         /*
-         * Prueba para ver si elimina
+         * Limpieza de la base de datos
          */
-        System.out.println();
         System.out.println("¿Deseas limpiar la base de datos? (s/n)");
-        System.out.println("Esto BORRARÁ TODOS LOS DATOS de la base de datos");
         String limpiar = sc.nextLine();
 
         if (limpiar.equalsIgnoreCase("s") || limpiar.equalsIgnoreCase("si")) {
-            System.out.println("Limpiando base de datos...");
             controller.limpiarBaseDatos();
-            System.out.println("Base de datos limpiada correctamente");
         } else {
             System.out.println("Los datos de la partida se han guardado");
         }
+
         sc.close();
     }
 
     /**
-     * Función para elegir los hechizos de cada mago
-     * 
-     * @param mago nombre del mago
-     * @return map de los hechizos de cada mago, clave nombre del mago y list de
-     *         hechizos
+     * Permite al usuario elegir los hechizos para un mago.
+     * @param sc Scanner para entrada de usuario
+     * @param mago Nombre del mago
+     * @return Lista de índices de hechizos seleccionados
      */
     public static List<Integer> elegirHechizos(Scanner sc, String mago) {
         List<Integer> hechizos = new ArrayList<Integer>();

@@ -2,6 +2,10 @@ package com.model;
 
 import jakarta.persistence.*;
 
+/**
+ * Representa un monstruo en el juego Dragolandia.
+ * Los monstruos tienen diferentes tipos y pueden atacar a los magos.
+ */
 @Entity
 @Table(name = "monstruos")
 public class Monstruo {
@@ -12,19 +16,46 @@ public class Monstruo {
 
     private String nombre;
     private int vida;
+
     @Enumerated(EnumType.STRING)
     private TipoMonstruo tipo;
+
     private int fuerza;
 
-    
+    /**
+     * Constructor vacío requerido por JPA.
+     */
     public Monstruo() {
     }
 
+    /**
+     * Crea un nuevo monstruo con tipo aleatorio.
+     * @param nombre El nombre del monstruo
+     */
     public Monstruo(String nombre) {
         this.nombre = nombre;
-        this.vida = 18;
-        this.tipo = TipoMonstruo.random();
-        this.fuerza = 4;
+        this.tipo = TipoMonstruo.values()[(int) (Math.random() * TipoMonstruo.values().length)];
+        asignarEstadisticas();
+    }
+
+    /**
+     * Asigna vida y fuerza según el tipo de monstruo.
+     */
+    private void asignarEstadisticas() {
+        switch (tipo) {
+            case OGRO:
+                this.vida = 15;
+                this.fuerza = 8;
+                break;
+            case TROLL:
+                this.vida = 20;
+                this.fuerza = 6;
+                break;
+            case ESPECTRO:
+                this.vida = 10;
+                this.fuerza = 10;
+                break;
+        }
     }
 
     public int getId() {
@@ -47,8 +78,12 @@ public class Monstruo {
         return vida;
     }
 
+    /**
+     * Establece la vida del monstruo. No puede ser negativa.
+     * @param vida Los puntos de vida (mínimo 0)
+     */
     public void setVida(int vida) {
-        if (vida < 1) {
+        if (vida < 0) {
             this.vida = 0;
         } else {
             this.vida = vida;
@@ -71,15 +106,18 @@ public class Monstruo {
         this.fuerza = fuerza;
     }
 
+    /**
+     * Ataca a un mago reduciendo su vida según la fuerza del monstruo.
+     * @param mago El mago objetivo
+     */
     public void atacar(Mago mago) {
-        int nuevaVida = mago.getVida() - this.getFuerza();
-
-        mago.setVida(nuevaVida);
+        System.out.println(nombre + " ataca a " + mago.getNombre() + " causando " + fuerza + " de daño");
+        mago.setVida(mago.getVida() - fuerza);
     }
 
     @Override
     public String toString() {
-        return "Monstruo [id=" + id + ", nombre=" + nombre + ", vida=" + vida + ", fuerza=" + fuerza
-                + ", tipo=" + tipo + "]";
+        return "Monstruo [id=" + id + ", nombre=" + nombre + ", vida=" + vida + ", tipo=" + tipo + ", fuerza="
+                + fuerza + "]";
     }
 }

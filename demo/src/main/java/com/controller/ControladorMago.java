@@ -5,10 +5,12 @@ import com.model.Mago;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
-import jakarta.persistence.Query;
 
 import java.util.List;
 
+/**
+ * Controlador para gestionar las operaciones CRUD de los Magos.
+ */
 public class ControladorMago {
     private final Mago mago;
     private final ControladorHechizos contrHechizos;
@@ -19,6 +21,11 @@ public class ControladorMago {
         this.contrHechizos = new ControladorHechizos();
     }
 
+    /**
+     * Crea y configura un mago.
+     * @param nombre Nombre del mago
+     * @param hechizos Lista de índices de hechizos a asignar
+     */
     public void crearMago(String nombre, List<Integer> hechizos) {
         mago.setNombre(nombre);
         mago.setVida(20);
@@ -26,6 +33,12 @@ public class ControladorMago {
         setConjuros(mago, hechizos);
     }
 
+    /**
+     * Crea un nuevo mago, le asigna hechizos y lo guarda en BD.
+     * @param nombre Nombre del mago
+     * @param conjuros Lista de índices de hechizos
+     * @return El mago creado
+     */
     public Mago newMago(String nombre, List<Integer> conjuros) {
         Mago newMago = new Mago(nombre);
         setConjuros(newMago, conjuros);
@@ -47,6 +60,11 @@ public class ControladorMago {
         return mago.getVida();
     }
 
+    /**
+     * Asigna hechizos a un mago desde la base de datos.
+     * @param mago El mago al que asignar hechizos
+     * @param hechizos Lista de índices de hechizos
+     */
     public void setConjuros(Mago mago, List<Integer> hechizos) {
         EntityManager em = database.getEntityManager();
 
@@ -77,17 +95,25 @@ public class ControladorMago {
     /*
      * BASE DE DATOS
      */
+    
+    /**
+     * Guarda un mago en la base de datos.
+     * @param mago El mago a guardar
+     */
     public void gardarMago(Mago mago) {
         EntityManager em = database.getEntityManager();
 
         try {
             EntityTransaction tx = em.getTransaction();
-
             tx.begin();
             em.persist(mago);
             tx.commit();
+            System.out.println("Mago guardado correctamente");
 
         } catch (Exception e) {
+            if (em.getTransaction().isActive()) {
+                em.getTransaction().rollback();
+            }
             System.out.println("ERROR AL AÑADIR UN MAGO: " + e.getMessage());
         } finally {
             if (em.isOpen())
@@ -95,17 +121,28 @@ public class ControladorMago {
         }
     }
 
+    /**
+     * Elimina un mago de la base de datos.
+     * @param mago El mago a eliminar
+     */
     public void eliminarMago(Mago mago) {
         EntityManager em = database.getEntityManager();
 
         try {
             EntityTransaction tx = em.getTransaction();
-
             tx.begin();
-            em.remove(mago);
+            
+            // Mergear para evitar detached entity
+            Mago magoGestionado = em.merge(mago);
+            em.remove(magoGestionado);
+            
             tx.commit();
+            System.out.println("Mago eliminado correctamente");
 
         } catch (Exception e) {
+            if (em.getTransaction().isActive()) {
+                em.getTransaction().rollback();
+            }
             System.out.println("ERROR AL BORRAR UN MAGO: " + e.getMessage());
         } finally {
             if (em.isOpen())
@@ -113,17 +150,24 @@ public class ControladorMago {
         }
     }
 
+    /**
+     * Actualiza un mago en la base de datos.
+     * @param mago El mago a actualizar
+     */
     public void actualizarMago(Mago mago) {
         EntityManager em = database.getEntityManager();
 
         try {
             EntityTransaction tx = em.getTransaction();
-
             tx.begin();
             em.merge(mago);
             tx.commit();
+            System.out.println("Mago actualizado correctamente");
 
         } catch (Exception e) {
+            if (em.getTransaction().isActive()) {
+                em.getTransaction().rollback();
+            }
             System.out.println("ERROR AL ACTUALIZAR UN MAGO: " + e.getMessage());
         } finally {
             if (em.isOpen())
@@ -131,41 +175,58 @@ public class ControladorMago {
         }
     }
 
-    public void ListarMagos() {
+    /**
+     * Lista todos los magos de la base de datos.
+     * @return Lista de magos
+     */
+    public List<Mago> listarMagos() {
         EntityManager em = database.getEntityManager();
+        List<Mago> magos = null;
 
         try {
             EntityTransaction tx = em.getTransaction();
-
             tx.begin();
-            em.createQuery("select * from Mago", Mago.class).getResultList();
+            magos = em.createQuery("SELECT m FROM Mago m", Mago.class).getResultList();
             tx.commit();
 
         } catch (Exception e) {
+            if (em.getTransaction().isActive()) {
+                em.getTransaction().rollback();
+            }
             System.out.println("ERROR AL LISTAR LOS MAGOS: " + e.getMessage());
         } finally {
             if (em.isOpen())
                 em.close();
         }
+        
+        return magos;
     }
 
-    public void buscarMago(int id) {
+    /**
+     * Busca un mago por su ID.
+     * @param id El ID del mago
+     * @return El mago encontrado o null
+     */
+    public Mago buscarMago(int id) {
         EntityManager em = database.getEntityManager();
+        Mago mago = null;
 
         try {
             EntityTransaction tx = em.getTransaction();
-
             tx.begin();
-            Query query = em.createQuery("select * from Mago where id=:id");
-            query.setParameter("id", id);
-            query.getResultList();
+            mago = em.find(Mago.class, id);
             tx.commit();
 
         } catch (Exception e) {
+            if (em.getTransaction().isActive()) {
+                em.getTransaction().rollback();
+            }
             System.out.println("ERROR AL BUSCAR EL MAGO: " + e.getMessage());
         } finally {
             if (em.isOpen())
                 em.close();
         }
+        
+        return mago;
     }
 }

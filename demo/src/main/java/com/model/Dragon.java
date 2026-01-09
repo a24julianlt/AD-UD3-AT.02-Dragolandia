@@ -2,6 +2,10 @@ package com.model;
 
 import jakarta.persistence.*;
 
+/**
+ * Representa un dragón protector del bosque.
+ * Los dragones pueden exhalar fuego contra los monstruos.
+ */
 @Entity
 @Table(name = "dragones")
 public class Dragon {
@@ -16,13 +20,20 @@ public class Dragon {
 
     @OneToOne
     private Bosque bosque;
-    
+
+    /**
+     * Constructor vacío requerido por JPA.
+     */
     public Dragon() {
     }
 
+    /**
+     * Crea un nuevo dragón con intensidad de fuego aleatoria.
+     * @param nombre El nombre del dragón
+     */
     public Dragon(String nombre) {
         this.nombre = nombre;
-        this.intensidadFuego = (int) Math.random() * 20;
+        this.intensidadFuego = (int) (Math.random() * 20);
         this.resistencia = 30;
     }
 
@@ -58,6 +69,26 @@ public class Dragon {
         this.resistencia = resistencia;
     }
 
+    /**
+     * Obtiene la vida del dragón (equivalente a resistencia).
+     * @return Los puntos de resistencia
+     */
+    public int getVida() {
+        return resistencia;
+    }
+
+    /**
+     * Establece la vida del dragón. No puede ser negativa.
+     * @param vida Los puntos de vida (mínimo 0)
+     */
+    public void setVida(int vida) {
+        if (vida < 0) {
+            this.resistencia = 0;
+        } else {
+            this.resistencia = vida;
+        }
+    }
+
     public Bosque getBosque() {
         return bosque;
     }
@@ -66,8 +97,20 @@ public class Dragon {
         this.bosque = bosque;
     }
 
+    /**
+     * Exhala fuego sobre un monstruo, reduciendo su vida.
+     * @param monstruo El monstruo objetivo
+     */
     public void exhalar(Monstruo monstruo) {
+        System.out.println(nombre + " exhala fuego sobre " + monstruo.getNombre());
         monstruo.setVida(monstruo.getVida() - intensidadFuego);
     }
 
+    /**
+     * Ataca a un monstruo exhalando fuego.
+     * @param monstruo El monstruo objetivo
+     */
+    public void atacar(Monstruo monstruo) {
+        exhalar(monstruo);
+    }
 }

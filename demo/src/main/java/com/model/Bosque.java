@@ -5,6 +5,10 @@ import java.util.List;
 
 import jakarta.persistence.*;
 
+/**
+ * Representa un bosque donde tiene lugar la batalla.
+ * Contiene monstruos y un monstruo jefe.
+ */
 @Entity
 @Table(name = "bosques")
 public class Bosque {
@@ -19,17 +23,25 @@ public class Bosque {
     @OneToOne
     private Monstruo monstruoJefe;
 
-    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @OneToMany
+    @JoinTable(name = "bosques_monstruos", 
+               joinColumns = @JoinColumn(name = "bosque_id"), 
+               inverseJoinColumns = @JoinColumn(name = "monstruo_id"))
     private List<Monstruo> monstruos = new ArrayList<>();
 
+    /**
+     * Constructor vacío requerido por JPA.
+     */
     public Bosque() {
     }
 
-    public Bosque(String nombre, int nivelPeligro, Monstruo monstruoJefe, List<Monstruo> monstruosBosque) {
+    /**
+     * Crea un nuevo bosque con nivel de peligro aleatorio.
+     * @param nombre El nombre del bosque
+     */
+    public Bosque(String nombre) {
         this.nombre = nombre;
-        this.nivelPeligro = nivelPeligro;
-        this.monstruoJefe = monstruoJefe;
-        this.monstruos = monstruosBosque;
+        this.nivelPeligro = (int) (Math.random() * 10) + 1;
     }
 
     public int getId() {
@@ -60,26 +72,47 @@ public class Bosque {
         return monstruoJefe;
     }
 
+    /**
+     * Cambia el monstruo jefe del bosque.
+     * @param monstruoJefe El nuevo monstruo jefe
+     */
     public void setMonstruoJefe(Monstruo monstruoJefe) {
         this.monstruoJefe = monstruoJefe;
     }
 
-    public List<Monstruo> getMonstruosBosque() {
+    public List<Monstruo> getMonstruos() {
         return monstruos;
     }
 
-    public void setMonstruosBosque(List<Monstruo> monstruos) {
+    public void setMonstruos(List<Monstruo> monstruos) {
         this.monstruos = monstruos;
     }
-    
+
+    /**
+     * Añade un monstruo a la lista del bosque.
+     * @param monstruo El monstruo a añadir
+     */
     public void addMonstruo(Monstruo monstruo) {
         this.monstruos.add(monstruo);
     }
 
-
-    @Override
-    public String toString() {
-        return "Bosque [id=" + id + ", nombre=" + nombre + ", nivel de Peligro=" + nivelPeligro + ", monstruo Jefe=" + monstruoJefe + "]";
+    /**
+     * Muestra la información del monstruo jefe.
+     */
+    public void mostrarJefe() {
+        if (monstruoJefe != null) {
+            System.out.println("El jefe del bosque es: " + monstruoJefe.getNombre());
+        } else {
+            System.out.println("No hay monstruo jefe en este bosque");
+        }
     }
 
+    /**
+     * Cambia el monstruo jefe del bosque.
+     * @param nuevoJefe El nuevo monstruo jefe
+     */
+    public void cambiarJefe(Monstruo nuevoJefe) {
+        this.monstruoJefe = nuevoJefe;
+        System.out.println("El nuevo jefe del bosque es: " + nuevoJefe.getNombre());
+    }
 }
