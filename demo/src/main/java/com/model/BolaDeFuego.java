@@ -7,7 +7,7 @@ import jakarta.persistence.Entity;
 @Entity
 public class BolaDeFuego extends Hechizo {
 
-    public BolaDeFuego(){
+    public BolaDeFuego() {
         this.nombre = "Bola de fuego";
     }
 
@@ -15,8 +15,7 @@ public class BolaDeFuego extends Hechizo {
     public void efecto(List<Monstruo> monstruos) {
         System.out.println("El mago usa " + nombre);
         for (Monstruo mons : monstruos) {
-            int daño = (int) Math.random() * 10;
-
+            int daño = (int) (Math.random() * 10);
             mons.setVida(mons.getVida() - daño);
         }
     }

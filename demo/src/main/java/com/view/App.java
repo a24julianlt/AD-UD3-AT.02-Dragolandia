@@ -123,27 +123,22 @@ public class App {
 
         System.out.println("Vale, ahora asignamos al bosque los Monstruos");
 
-        for (int i = 0; i < monstruos.size(); i++) {
-            if (i == 0) {
-                controller.setMontruoJefe(monstruos.get(i));
-                System.out.println("El primer monstruo lo añadimos como jefe del bosque");
-            } else {
-                controller.añadirABosque(monstruos.get(i));
-            }
-        }
-
         System.out.println();
 
+        controller.setMontruoJefe(monstruos.get(0));
+        System.out.println("El primer monstruo lo añadimos como jefe del bosque");
 
-
-
-
-
-    
-
+        monstruos.remove(0);
+        controller.setMonstruosBosque(monstruos);
+        System.out.println("El resto de monstruos los añadimos al bosque");
 
         System.out.println();
-        System.out.println("Perfecto, vamos a empezar a pelear");
+        System.out.println();
+
+        System.out.println("¡Perfecto! Ya tenemos todo listo para empezar la pelea");
+
+        System.out.println();
+        System.out.println("Empieza la pelea...");
         System.out.println();
 
         try {
@@ -214,13 +209,18 @@ public class App {
         /*
          * Prueba para ver si elimina
          */
-        controller.eliminarDragon();
-        controller.eliminarBosque();
-        controller.eliminarListaMonstruo(controller.getListMonstruos());
-        controller.eliminarMonstruo();
-        // eliminar hechizos
-        controller.eliminarMago();
+        System.out.println();
+        System.out.println("¿Deseas limpiar la base de datos? (s/n)");
+        System.out.println("Esto BORRARÁ TODOS LOS DATOS de la base de datos");
+        String limpiar = sc.nextLine();
 
+        if (limpiar.equalsIgnoreCase("s") || limpiar.equalsIgnoreCase("si")) {
+            System.out.println("Limpiando base de datos...");
+            controller.limpiarBaseDatos();
+            System.out.println("Base de datos limpiada correctamente");
+        } else {
+            System.out.println("Los datos de la partida se han guardado");
+        }
         sc.close();
     }
 

@@ -1,5 +1,6 @@
 package com.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import jakarta.persistence.*;
@@ -14,6 +15,9 @@ public abstract class Hechizo {
     protected int id;
 
     protected String nombre;
+
+    @OneToMany(mappedBy = "hechizo", cascade = CascadeType.ALL)
+    private List<MagoHechizo> magoHechizos = new ArrayList<>();
 
     public Hechizo() {
 

@@ -4,6 +4,9 @@ import java.util.List;
 
 import com.model.*;
 
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityTransaction;
+
 public class ControladorPrincipal {
     private final ControladorMago contrMago;
     private final ControladorMonstruo contrMonstruo;
@@ -124,6 +127,12 @@ public class ControladorPrincipal {
         contrBosque.actualizarBosque(contrBosque.getBosque());
     }
 
+    public void setMonstruosBosque(List<Monstruo> listaMons) {
+        contrBosque.setMonstruosBosque(listaMons);
+
+        contrBosque.actualizarBosque(contrBosque.getBosque());
+    }
+
     /*
      * BASE DE DATOS
      */
@@ -173,5 +182,31 @@ public class ControladorPrincipal {
 
     public void eliminarDragon() {
         contrDragon.eliminarDragon(contrDragon.getDragon());
+    }
+
+    public void limpiarBaseDatos() {
+        // Orden importante: eliminar primero las relaciones dependientes
+        EntityManager em = HibernateSingleton.getInstance().getEntityManager();
+
+        try {
+            EntityTransaction tx = em.getTransaction();
+            tx.begin();
+
+            // Eliminar por queries directas (más seguro que mergear)
+            em.createQuery("DELETE FROM MagoHechizo").executeUpdate();
+            em.createQuery("DELETE FROM Mago").executeUpdate();
+            em.createQuery("DELETE FROM Hechizo").executeUpdate();
+            em.createQuery("DELETE FROM Dragon").executeUpdate();
+            em.createQuery("DELETE FROM Bosque").executeUpdate();
+            em.createQuery("DELETE FROM Monstruo").executeUpdate();
+
+            tx.commit();
+
+        } catch (Exception e) {
+            System.out.println("ERROR AL ELIMINAR UN MONSTRUO: " + e.getMessage());
+        } finally {
+            if (em.isOpen())
+                em.close();
+        }
     }
 }

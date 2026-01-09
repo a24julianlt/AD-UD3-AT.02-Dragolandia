@@ -1,5 +1,6 @@
 package com.controller;
 
+import com.model.Hechizo;
 import com.model.Mago;
 
 import jakarta.persistence.EntityManager;
@@ -47,8 +48,29 @@ public class ControladorMago {
     }
 
     public void setConjuros(Mago mago, List<Integer> hechizos) {
-        for (int h : hechizos) {
-            mago.añadirConjuro(contrHechizos.getHechizo(h));
+        EntityManager em = database.getEntityManager();
+
+        try {
+            for (int h : hechizos) {
+                Hechizo hechizoOriginal = contrHechizos.getHechizo(h);
+
+                // Buscar el hechizo en BD por nombre para obtener la entidad gestionada
+                Hechizo hechizoGestionado = em.createQuery(
+                        "SELECT h FROM Hechizo h WHERE h.nombre = :nombre", Hechizo.class)
+                        .setParameter("nombre", hechizoOriginal.getNombre())
+                        .getSingleResult();
+
+                mago.añadirConjuro(hechizoGestionado);
+            }
+        } catch (Exception e) {
+            System.out.println("ERROR AL ASIGNAR HECHIZOS: " + e.getMessage());
+            // Fallback: usar los hechizos originales
+            for (int h : hechizos) {
+                mago.añadirConjuro(contrHechizos.getHechizo(h));
+            }
+        } finally {
+            if (em.isOpen())
+                em.close();
         }
     }
 

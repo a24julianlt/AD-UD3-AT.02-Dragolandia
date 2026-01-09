@@ -45,25 +45,33 @@ public class ControladorHechizos {
 
         try {
             EntityTransaction tx = em.getTransaction();
-
             tx.begin();
 
             for (Hechizo h : hechizos) {
+                // Buscar si ya existe en BD
                 Hechizo existente = em.createQuery(
                         "SELECT h FROM Hechizo h WHERE h.nombre = :nombre",
-                        Hechizo.class).setParameter("nombre", h.getNombre())
+                        Hechizo.class)
+                        .setParameter("nombre", h.getNombre())
                         .getResultStream()
                         .findFirst()
                         .orElse(null);
 
-                if (existente != null) {
+                if (existente == null) {
+                    // Solo persiste si no existe
+                    em.persist(h);
+                } else {
+                    // Actualiza la referencia en memoria con el ID de BD
                     h.setId(existente.getId());
                 }
             }
-            
+
             tx.commit();
 
         } catch (Exception e) {
+            if (em.getTransaction().isActive()) {
+                em.getTransaction().rollback();
+            }
             System.out.println("ERROR AL AÑADIR EL HECHIZO: " + e.getMessage());
         } finally {
             if (em.isOpen())
@@ -80,7 +88,7 @@ public class ControladorHechizos {
             tx.begin();
 
             em.remove(hechizo);
-            
+
             tx.commit();
 
         } catch (Exception e) {
@@ -100,7 +108,7 @@ public class ControladorHechizos {
             tx.begin();
 
             em.merge(hechizo);
-            
+
             tx.commit();
 
         } catch (Exception e) {
@@ -120,7 +128,7 @@ public class ControladorHechizos {
             tx.begin();
 
             em.createQuery("select * from Hechizos", Hechizo.class).getResultList();
-            
+
             tx.commit();
 
         } catch (Exception e) {

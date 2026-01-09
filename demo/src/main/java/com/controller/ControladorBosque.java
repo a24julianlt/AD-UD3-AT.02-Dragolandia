@@ -54,6 +54,10 @@ public class ControladorBosque {
         bosque.addMonstruo(mons);
     }
 
+    public void setMonstruosBosque(List<Monstruo> listaMons) {
+        bosque.setMonstruosBosque(listaMons);
+    }
+
     /*
      * BASE DE DATOS
      */
