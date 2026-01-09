@@ -134,8 +134,10 @@ public class App {
         controller.setMontruoJefe(monstruos.get(0));
         System.out.println("El primer monstruo lo añadimos como jefe del bosque");
 
-        monstruos.remove(0);
-        controller.setMonstruosBosque(monstruos);
+        // Mandamos la lista de monstruos sin el jefe al bosque para que no de errores
+        List<Monstruo> monsNoJefe = new ArrayList<>(monstruos);
+        monsNoJefe.remove(0);
+        controller.setMonstruosBosque(monsNoJefe);
         System.out.println("El resto de monstruos los añadimos al bosque");
 
         System.out.println();
@@ -192,7 +194,7 @@ public class App {
                                 muertosTrasHechizo.add(obj);
                             }
                         }
-                        controller.getListMonstruos().removeAll(muertosTrasHechizo);
+                        
 
                         if (bosque.getMonstruoJefe() != null && bosque.getMonstruoJefe().getVida() <= 0) {
                             System.out.println("Muere el jefe " + bosque.getMonstruoJefe().getNombre());
@@ -242,11 +244,6 @@ public class App {
                     Mago objetivo = magosVivos.get((int) (Math.random() * magosVivos.size()));
                     System.out.println(monstruo.getNombre() + " ataca a " + objetivo.getNombre());
                     monstruo.atacar(objetivo);
-
-                    if (objetivo.getVida() <= 0) {
-                        System.out.println("Muere " + objetivo.getNombre());
-                        magos.removeIf(m -> m.getNombre().equals(objetivo.getNombre()));
-                    }
                 }
             }
 
@@ -285,7 +282,7 @@ public class App {
             for (Mago m : magosMuertos) {
                 System.out.println(m.getNombre() + " ha muerto");
             }
-            magos.removeAll(magosMuertos);
+            // magos.removeAll(magosMuertos);
 
             // Eliminar monstruos muertos
             List<Monstruo> monstruosMuertos = controller.getListMonstruos().stream()
@@ -295,7 +292,7 @@ public class App {
             for (Monstruo m : monstruosMuertos) {
                 System.out.println(m.getNombre() + " ha muerto");
             }
-            controller.getListMonstruos().removeAll(monstruosMuertos);
+            
 
             // Si el jefe muere, asignar nuevo jefe
             if (bosque.getMonstruoJefe() != null && bosque.getMonstruoJefe().getVida() <= 0) {
@@ -354,6 +351,9 @@ public class App {
                 e.printStackTrace();
             }
 
+            // Después de cada ronda actualizamos la BD
+            controller.actualizarBD(bosque, dragon, magos, monstruos);
+
             ronda++;
         }
 
@@ -380,6 +380,7 @@ public class App {
         if (limpiar.equalsIgnoreCase("s") || limpiar.equalsIgnoreCase("si")) {
             controller.limpiarBaseDatos();
         } else {
+            controller.actualizarBD(bosque, dragon, magos, monstruos);
             System.out.println("Los datos de la partida se han guardado");
         }
 

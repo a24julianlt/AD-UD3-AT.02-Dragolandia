@@ -29,6 +29,7 @@ public class ControladorPrincipal {
 
     /**
      * Obtiene la vida del mago actual.
+     * 
      * @return Puntos de vida del mago
      */
     public int getVidaMago() {
@@ -37,6 +38,7 @@ public class ControladorPrincipal {
 
     /**
      * Obtiene el nivel de magia del mago actual.
+     * 
      * @return Nivel de magia
      */
     public int getNivelMagia() {
@@ -45,6 +47,7 @@ public class ControladorPrincipal {
 
     /**
      * Obtiene la vida del monstruo actual.
+     * 
      * @return Puntos de vida del monstruo
      */
     public int getVidaMons() {
@@ -53,6 +56,7 @@ public class ControladorPrincipal {
 
     /**
      * Obtiene el tipo del monstruo actual.
+     * 
      * @return Tipo de monstruo
      */
     public TipoMonstruo getTipoMons() {
@@ -61,6 +65,7 @@ public class ControladorPrincipal {
 
     /**
      * Obtiene la lista de monstruos del bosque.
+     * 
      * @return Lista de monstruos
      */
     public List<Monstruo> getListMonstruos() {
@@ -69,6 +74,7 @@ public class ControladorPrincipal {
 
     /**
      * Obtiene el nombre de un hechizo.
+     * 
      * @param hechizo Nombre del hechizo a buscar
      * @return Nombre del hechizo o cadena vacía
      */
@@ -96,7 +102,8 @@ public class ControladorPrincipal {
 
     /**
      * Lanza un hechizo sobre una lista de monstruos.
-     * @param hechizo Nombre del hechizo a lanzar
+     * 
+     * @param hechizo   Nombre del hechizo a lanzar
      * @param monstruos Lista de monstruos objetivo
      */
     public void usarHechizo(String hechizo, List<Monstruo> monstruos) {
@@ -120,6 +127,7 @@ public class ControladorPrincipal {
 
     /**
      * Verifica si la partida ha terminado.
+     * 
      * @return true si la partida continúa, false si ha terminado
      */
     public boolean finPartida() {
@@ -145,6 +153,7 @@ public class ControladorPrincipal {
 
     /**
      * Verifica si el mago ha ganado.
+     * 
      * @return true si el mago sigue vivo, false si ha muerto
      */
     public boolean ganaMago() {
@@ -156,6 +165,7 @@ public class ControladorPrincipal {
 
     /**
      * Establece un monstruo como jefe del bosque.
+     * 
      * @param mons El monstruo a designar como jefe
      */
     public void setMontruoJefe(Monstruo mons) {
@@ -164,6 +174,7 @@ public class ControladorPrincipal {
 
     /**
      * Crea un nuevo monstruo.
+     * 
      * @param nombreMonstruo Nombre del monstruo
      * @return El monstruo creado
      */
@@ -173,8 +184,9 @@ public class ControladorPrincipal {
 
     /**
      * Crea un nuevo mago con sus hechizos.
+     * 
      * @param nombreMago Nombre del mago
-     * @param conjuros Lista de índices de hechizos
+     * @param conjuros   Lista de índices de hechizos
      * @return El mago creado
      */
     public Mago crearMago(String nombreMago, List<Integer> conjuros) {
@@ -183,6 +195,7 @@ public class ControladorPrincipal {
 
     /**
      * Crea un nuevo dragón.
+     * 
      * @param nombreDragon Nombre del dragón
      * @return El dragón creado
      */
@@ -192,6 +205,7 @@ public class ControladorPrincipal {
 
     /**
      * Añade un monstruo al bosque.
+     * 
      * @param mons El monstruo a añadir
      */
     public void añadirABosque(Monstruo mons) {
@@ -202,6 +216,7 @@ public class ControladorPrincipal {
 
     /**
      * Establece la lista de monstruos del bosque.
+     * 
      * @param listaMons Lista de monstruos
      */
     public void setMonstruosBosque(List<Monstruo> listaMons) {
@@ -212,6 +227,7 @@ public class ControladorPrincipal {
 
     /**
      * Obtiene todos los hechizos disponibles en el juego.
+     * 
      * @return Lista de los 4 hechizos
      */
     public List<Hechizo> getTodosLosHechizos() {
@@ -224,6 +240,7 @@ public class ControladorPrincipal {
 
     /**
      * Obtiene el bosque actual del juego.
+     * 
      * @return El bosque
      */
     public Bosque obtenerBosque() {
@@ -232,6 +249,7 @@ public class ControladorPrincipal {
 
     /**
      * Obtiene el dragón actual del juego.
+     * 
      * @return El dragón
      */
     public Dragon obtenerDragon() {
@@ -241,11 +259,12 @@ public class ControladorPrincipal {
     /*
      * BASE DE DATOS
      */
-    
+
     /**
      * Guarda un mago en la base de datos.
+     * 
      * @param nombreMago Nombre del mago
-     * @param conjuros Lista de índices de hechizos
+     * @param conjuros   Lista de índices de hechizos
      */
     public void gardarMago(String nombreMago, List<Integer> conjuros) {
         contrMago.gardarMago(contrMago.newMago(nombreMago, conjuros));
@@ -253,6 +272,7 @@ public class ControladorPrincipal {
 
     /**
      * Guarda un monstruo en la base de datos.
+     * 
      * @param nombreMonstruo Nombre del monstruo
      */
     public void gardarMonstruo(String nombreMonstruo) {
@@ -261,6 +281,7 @@ public class ControladorPrincipal {
 
     /**
      * Guarda una lista de monstruos en la base de datos.
+     * 
      * @param monstruos Lista de monstruos a guardar
      */
     public void gardarListaMonstruo(List<Monstruo> monstruos) {
@@ -270,6 +291,7 @@ public class ControladorPrincipal {
 
     /**
      * Guarda el bosque en la base de datos.
+     * 
      * @param nombreBosque Nombre del bosque
      */
     public void gardarBosque(String nombreBosque) {
@@ -308,6 +330,7 @@ public class ControladorPrincipal {
 
     /**
      * Elimina una lista de monstruos de la base de datos.
+     * 
      * @param monstruos Lista de monstruos a eliminar
      */
     public void eliminarListaMonstruo(List<Monstruo> monstruos) {
@@ -331,7 +354,8 @@ public class ControladorPrincipal {
 
     /**
      * Limpia completamente la base de datos eliminando todas las entidades.
-     * Respeta el orden de dependencias para evitar errores de integridad referencial.
+     * Respeta el orden de dependencias para evitar errores de integridad
+     * referencial.
      */
     public void limpiarBaseDatos() {
         EntityManager em = HibernateSingleton.getInstance().getEntityManager();
@@ -359,6 +383,17 @@ public class ControladorPrincipal {
         } finally {
             if (em.isOpen())
                 em.close();
+        }
+    }
+
+    public void actualizarBD(Bosque bosque, Dragon dragon, List<Mago> magos, List<Monstruo> monstruos) {
+        contrBosque.actualizarBosque(bosque);
+        contrDragon.actualizarDragon(dragon);
+        for (Mago m : magos) {
+            contrMago.actualizarMago(m);
+        }
+        for (Monstruo m : monstruos) {
+            contrMonstruo.actualizarMonstruo(m);
         }
     }
 }
