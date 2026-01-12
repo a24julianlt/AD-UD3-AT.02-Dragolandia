@@ -293,3 +293,7 @@ erDiagram
     HECHIZOS ||--o| RAYO : hereda
     HECHIZOS ||--o| METEORITO : hereda
 ```
+
+## Manual de usuario
+
+[haz clic aquí para acceder al manual de usuario](manual_de_usuario.md)
