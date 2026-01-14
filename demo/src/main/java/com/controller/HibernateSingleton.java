@@ -36,4 +36,33 @@ public class HibernateSingleton {
             emf.close();
         }
     }
+
+    /*
+    * Clase anterior usando SessionFactory
+    * private HibernateSingleton() {
+    *   try {
+    *       sessionFactory = new Configuration()
+    *         .configure()
+    *         .buildSessionFactory();
+    *   } catch (Exception e) {
+    *     System.err.println("Error al crear SessionFactory: " + e.getMessage());
+    *     throw new ExceptionInInitializerError(e);
+    *   }
+    * }
+    * 
+    * public static HibernateSingleton getInstance() {
+    *   if (instance == null) {
+    *     synchronized (HibernateSingleton.class) {
+    *       if (instance == null) {
+    *         instance = new HibernateSingleton();
+    *       }
+    *     }
+    * }
+    *   return instance;
+    * }
+    * 
+    * public SessionFactory getSessionFactory() {
+    *     return sessionFactory;
+    * }
+    */
 }
