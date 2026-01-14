@@ -38,31 +38,37 @@ public class HibernateSingleton {
     }
 
     /*
-    * Clase anterior usando SessionFactory
-    * private HibernateSingleton() {
-    *   try {
-    *       sessionFactory = new Configuration()
-    *         .configure()
-    *         .buildSessionFactory();
-    *   } catch (Exception e) {
-    *     System.err.println("Error al crear SessionFactory: " + e.getMessage());
-    *     throw new ExceptionInInitializerError(e);
-    *   }
-    * }
+    * Clase con Hibernate SessionFactory
     * 
-    * public static HibernateSingleton getInstance() {
-    *   if (instance == null) {
-    *     synchronized (HibernateSingleton.class) {
-    *       if (instance == null) {
-    *         instance = new HibernateSingleton();
+    * public class HibernateSingleton {
+    *   private static HibernateSingleton instance;
+    *   private SessionFactory sessionFactory;
+    * 
+    *   private HibernateSingleton() {
+    *       try {
+    *           sessionFactory = new Configuration()
+    *               .configure()
+    *               .buildSessionFactory();
+    *       } catch (Exception e) {
+    *           System.err.println("Error al crear SessionFactory: " + e.getMessage());
+    *           throw new ExceptionInInitializerError(e);
     *       }
-    *     }
-    * }
-    *   return instance;
-    * }
+    *   }
     * 
-    * public SessionFactory getSessionFactory() {
-    *     return sessionFactory;
-    * }
+    *   public static HibernateSingleton getInstance() {
+    *       if (instance == null) {
+    *           synchronized (HibernateSingleton.class) {
+    *               if (instance == null) {
+    *                   instance = new HibernateSingleton();
+    *               }
+    *           }
+    *       }
+    *       return instance;
+    *   }
+    * 
+    *   public SessionFactory getSessionFactory() {
+    *       return sessionFactory;
+    *   }
+    * 
     */
 }
