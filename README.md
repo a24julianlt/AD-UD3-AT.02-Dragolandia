@@ -296,4 +296,9 @@ erDiagram
 
 ## Manual de usuario
 
-[haz clic aquí para acceder al manual de usuario](manual_de_usuario.md)
+[Haz clic aquí para acceder al manual de usuario](manual_de_usuario.md)
+
+
+## Base de datos
+
+[Haz clic aquí para acceder a las imágenes de la BD](AD-UD3-AT.06-Dragolandia_hibernate_Lopez_Triñanes_Julian.pdf)
